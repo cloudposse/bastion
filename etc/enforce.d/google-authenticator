@@ -11,6 +11,7 @@ until [ -f .google_authenticator ]; do
     fi
 
     if [ -f .google_authenticator ]; then
+      chmod 600 .google_authenticator
       echo "MFA enabled for $USER"
     else
       echo "MFA setup is mandatory"
