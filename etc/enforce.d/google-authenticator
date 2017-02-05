@@ -4,6 +4,7 @@ until [ -f .google_authenticator ]; do
     exit 1
   else 
     echo -e "\nWelcome $USER. Please follow the prompts to setup your MFA device..."
+    umask 0066
     google-authenticator
     if [ $? -ne 0 ]; then
       echo "MFA setup failed"

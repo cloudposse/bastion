@@ -1,0 +1,21 @@
+sudo: required
+addons:
+  apt:
+    packages:
+    - git
+    - make
+    - curl
+env:
+  - DOCKER_IMAGE_NAME=cloudposse/bastion
+services:
+- docker
+install:
+- make init
+- make docker:login
+
+script:
+- make deps
+- make docker:build
+
+after_success:
+- make travis:docker-tag-and-push
