@@ -1,0 +1,5 @@
+#%PAM-1.0
+auth      required    pam_env.so
+auth      include     mfa
+#auth      sufficient  pam_unix.so try_first_pass likeauth nullok
+#auth      required    pam_deny.so
