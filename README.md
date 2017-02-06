@@ -22,14 +22,19 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 
 
 - [Help](#help)
+- [Quick Start](#quick-start)
 - [Usage](#usage)
-  - [Building (optional)](#building-optional)
   - [Running](#running)
+  - [Building](#building)
   - [Configuration](#configuration)
+- [Recommendations](#recommendations)
     - [Environment Variables](#environment-variables)
+      - [Duo Settings](#duo-settings)
+      - [Google Authenticator Settings](#google-authenticator-settings)
+      - [Enforcer Settings](#enforcer-settings)
+      - [SSH Auditor](#ssh-auditor)
     - [User Accounts & SSH Keys](#user-accounts-&-ssh-keys)
   - [Extending](#extending)
-- [Quick Start](#quick-start)
 - [Contributing](#contributing)
     - [Bug Reports & Feature Requests](#bug-reports-&-feature-requests)
     - [Developing](#developing)
@@ -37,8 +42,7 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 - [Thanks](#thanks)
 - [License](#license)
 - [About](#about)
-- [Author](#author)
-- [Contact](#contact)
+  - [Contributors](#contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -90,6 +94,12 @@ $ make docker:build
 
 
 ### Configuration
+
+## Recommendations
+
+* Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs
+* Use this more as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
+* Sync the contents of `SSH_AUDIT_DIR` to some remote, offsite location. If using S3, we recommend enabling bucket-versioning.
 
 #### Environment Variables
 
