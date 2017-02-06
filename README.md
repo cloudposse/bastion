@@ -13,7 +13,7 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 [![GitHub Stars](https://img.shields.io/github/stars/cloudposse/bastion.svg)](https://github.com/IgorAntun/node-chat/stargazers) 
 ![GitHub Issues](https://img.shields.io/github/issues/cloudposse/bastion.svg)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
-![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)
+![License](https://img.shields.io/badge/license-APACHE%202.0%20-brightgreen.svg)
 
 
 ## Table of Contents
