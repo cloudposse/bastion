@@ -1,4 +1,3 @@
-
 # Secure Bastion with MFA
 
 This is a secure/locked-down bastion implemented as a Docker Container. It uses Alpine Linux as the base image and ships with support for Google Authenticator & DUO MFA support.
