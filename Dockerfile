@@ -32,6 +32,7 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
       cd /usr/src/openssh && \
       git checkout ${OPENSSH_VERSION} && \
       sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h && \
+      sed -i -E 's/OpenSSH_[0-9.]+/SERVER/' version.h && \
       autoreconf && \
       ./configure \
           --prefix=/usr \

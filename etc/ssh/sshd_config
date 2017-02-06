@@ -101,7 +101,7 @@ UseDNS no
 #VersionAddendum none
 
 # no default banner path
-#Banner none
+Banner none
 
 # override default of no subsystems
 Subsystem	sftp	/usr/lib/ssh/sftp-server -l VERBOSE
