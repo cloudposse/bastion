@@ -9,10 +9,10 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 [![Docker Stars](https://img.shields.io/docker/stars/cloudposse/bastion.svg)](https://hub.docker.com/r/cloudposse/bastion)
 [![Docker Pulls](https://img.shields.io/docker/pulls/cloudposse/bastion.svg)](https://hub.docker.com/r/cloudposse/bastion)
 [![Build Status](https://travis-ci.org/cloudposse/bastion.svg?branch=master)](https://travis-ci.org/cloudposse/bastion)
-[![GitHub Stars](https://img.shields.io/github/stars/cloudposse/bastion.svg)](https://github.com/IgorAntun/node-chat/stargazers) 
-![GitHub Issues](https://img.shields.io/github/issues/cloudposse/bastion.svg)
-![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
-![License](https://img.shields.io/badge/license-APACHE%202.0%20-brightgreen.svg)
+[![GitHub Stars](https://img.shields.io/github/stars/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/stargazers) 
+[![GitHub Issues](https://img.shields.io/github/issues/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/issues)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/cloudposse/bastion/pulls)
+[![License](https://img.shields.io/badge/license-APACHE%202.0%20-brightgreen.svg)](https://github.com/cloudposse/bastion/blob/master/LICENSE)
 
 
 ## Table of Contents
