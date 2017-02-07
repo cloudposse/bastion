@@ -189,10 +189,10 @@ View our closed [Pull Requests](https://github.com/cloudposse/bastion/pulls?q=is
 
 ## Thanks
 
-[@neochrome](https://github.com/neochrome/docker-bastion), for providing a great basic bastion built on top of Alpine Linux
-[@aws](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/), for providing detailed instructions on how to do SSH session logging.
-[@duo](https://duo.com/docs/duounix), for providing excellent documentation
-[@google](https://github.com/google/google-authenticator-libpam) for contributing Google Authenticator to the Open Source community
+- [@neochrome](https://github.com/neochrome/docker-bastion), for providing a great basic bastion built on top of Alpine Linux
+- [@aws](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/), for providing detailed instructions on how to do SSH session logging.
+- [@duo](https://duo.com/docs/duounix), for providing excellent documentation
+- [@google](https://github.com/google/google-authenticator-libpam) for contributing Google Authenticator to the Open Source community
 
 ## License
 
