@@ -11,6 +11,8 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 [![Build Status](https://travis-ci.org/cloudposse/bastion.svg?branch=master)](https://travis-ci.org/cloudposse/bastion)
 [![GitHub Stars](https://img.shields.io/github/stars/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/stargazers) 
 [![GitHub Issues](https://img.shields.io/github/issues/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/issues)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/cloudposse/bastion.svg)](http://isitmaintained.com/project/cloudposse/bastion "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/cloudposse/bastion.svg)](http://isitmaintained.com/project/cloudposse/bastion "Percentage of issues still open")
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/cloudposse/bastion/pulls)
 [![License](https://img.shields.io/badge/license-APACHE%202.0%20-brightgreen.svg)](https://github.com/cloudposse/bastion/blob/master/LICENSE)
 
