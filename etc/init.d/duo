@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ "${MFA_PROVIDER}" == "duo" ]; then
+  echo "- Enabling DUO MFA"
+  echo -e "#%PAM-1.0\nauth      sufficient  pam_duo.so conf=/etc/pam_duo.conf" > /etc/pam.d/mfa
+  if [ -z "${DUO_IKEY}" ]; then
+    echo "DUO_IKEY not defined"
+    exit 1;
+  fi
+
+  if [ -z "${DUO_SKEY}" ]; then
+    echo "DUO_SKEY not defined"
+    exit 1;
+  fi
+
+  if [ -z "${DUO_HOST}" ]; then
+    echo "DUO_HOST not defined"
+    exit 1;
+  fi
+
+  envsubst < /etc/pam_duo.conf.env > /etc/pam_duo.conf
+  chmod 600 /etc/pam_duo.conf
+fi
+
+

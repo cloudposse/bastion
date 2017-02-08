@@ -1,3 +1,4 @@
 #%PAM-1.0
+auth      include     rate-limit
 auth      required    pam_env.so
 auth      include     mfa

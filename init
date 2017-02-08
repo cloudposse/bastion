@@ -1,56 +1,14 @@
 #!/bin/bash
 
-if [ "${MFA_PROVIDER}" == "duo" ]; then
-  echo "Enabling DUO MFA"
-  echo -e "#%PAM-1.0\nauth      sufficient  pam_duo.so conf=/etc/pam_duo.conf" > /etc/pam.d/mfa
-  if [ -z "${DUO_IKEY}" ]; then
-    echo "DUO_IKEY not defined"
-    exit 1;
+for script in /etc/init.d/* ; do
+  if [ -r $script ] && [ -x $script ]; then
+    echo "Initializing $(basename ${script})"
+    $script
+    if [ $? -ne 0 ]; then
+      echo "FATAL: Failed to initialize"
+      exit 1
+    fi
   fi
-
-  if [ -z "${DUO_SKEY}" ]; then
-    echo "DUO_SKEY not defined"
-    exit 1;
-  fi
-
-  if [ -z "${DUO_HOST}" ]; then
-    echo "DUO_HOST not defined"
-    exit 1;
-  fi
-
-  envsubst < /etc/pam_duo.conf.env > /etc/pam_duo.conf
-  chmod 600 /etc/pam_duo.conf
-fi
-
-if [ "${MFA_PROVIDER}" == "google-authenticator" ]; then
-  echo "Enabling Google Authenticator MFA"
-  echo -e "#%PAM-1.0\nauth required pam_google_authenticator.so nullok" > /etc/pam.d/mfa
-  chmod 755 /etc/enforce.d/google-authenticator
-fi
-
-if [ "${ENFORCER_ENABLED}" == "true" ]; then
-  echo "Enabling Enforcer"
-  env | grep "^ENFORCER_" > /etc/enforcer
-  echo "ForceCommand /usr/bin/enforcer" >> /etc/ssh/sshd_config
-fi
-
-if [ "${ENFORCER_ACLS_ENABLED}" == "true" ]; then
-  echo "Enabling Enforcer ACLs"
-  chmod 755 /etc/enforce.d/acls
-fi
-
-
-if [ "${SSH_AUDIT_ENABLED}" == "true" ]; then
-  echo "Enabling SSH Audit Logs"
-  mkdir -p ${SSH_AUDIT_DIR}
-  chmod 733 ${SSH_AUDIT_DIR}
-  chmod 755 /etc/enforce.d/recorder
-  env | grep "^SSH_AUDIT_" > /etc/recorder
-fi
-
-
-([ -f /etc/ssh/ssh_host_rsa_key ] || ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N "")
-
-chmod 700 /proc
+done
 
 exec /usr/sbin/sshd -D -e
