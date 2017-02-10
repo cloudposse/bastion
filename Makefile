@@ -21,3 +21,6 @@ init:
 deps:
 	@exit 0
 
+run: 
+	ssh-keygen -R '[localhost]:1234'
+	docker run -it -p1234:22 -v ~/.ssh/:/root/.ssh/ -e MFA_PROVIDER=google-authenticator --entrypoint=/bin/bash cloudposse/bastion
