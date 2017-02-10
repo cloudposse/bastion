@@ -35,7 +35,7 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
     ( git clone https://github.com/openssh/openssh-portable.git /usr/src/openssh && \
       cd /usr/src/openssh && \
       git checkout ${OPENSSH_VERSION} && \
-      find ../patches/openssh -type f | xargs -n 1 patch -p1 -i && \
+      (find ../patches/openssh -type f | xargs -n 1 patch -p1 -i) && \
       sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h && \
       sed -i -E 's/OpenSSH_[0-9.]+/SERVER/' version.h && \
       autoreconf && \
