@@ -1,17 +1,5 @@
 #%PAM-1.0
-auth      include     rate-limit
-auth      required    pam_env.so
-auth      include     mfa
-
-# If we don't have config entries for a service, the
-# OTHER entries are used. To be secure, warn and deny
-# access to everything.
-other auth     required       pam_warn.so
-other auth     required       pam_deny.so
-other account  required       pam_warn.so
-other account  required       pam_deny.so
-other password required       pam_warn.so
-other password required       pam_deny.so
-other session  required       pam_warn.so
-other session  required       pam_deny.so
-
+auth       include     rate-limit
+auth       required    pam_env.so
+session    optional    pam_umask.so umask=0066
+auth       include     mfa

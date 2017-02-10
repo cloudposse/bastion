@@ -3,6 +3,7 @@
 if [ "${MFA_PROVIDER}" == "google-authenticator" ]; then
   echo "- Enabling Google Authenticator MFA"
   echo -e "#%PAM-1.0\nauth required pam_google_authenticator.so nullok" > /etc/pam.d/mfa
+  echo "auth       optional    pam_echo.so file=/etc/auth-failure.txt" >> /etc/pam.d/mfa
   chmod 755 /etc/enforce.d/google-authenticator
 fi
 

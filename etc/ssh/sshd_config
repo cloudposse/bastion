@@ -46,7 +46,6 @@ StrictModes yes
 MaxAuthTries 6
 MaxSessions 10
 
-RSAAuthentication yes
 PubkeyAuthentication yes
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
@@ -58,15 +57,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #AuthorizedKeysCommand none
 #AuthorizedKeysCommandUser nobody
 
-# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-#RhostsRSAAuthentication no
-# similar for protocol version 2
-#HostbasedAuthentication no
-# Change to yes if you don't trust ~/.ssh/known_hosts for
-# RhostsRSAAuthentication and HostbasedAuthentication
-#IgnoreUserKnownHosts no
 # Don't read the user's ~/.rhosts and ~/.shosts files
-#IgnoreRhosts yes
+IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
@@ -89,16 +81,15 @@ PrintLastLog yes
 TCPKeepAlive yes
 #UseLogin no
 UsePrivilegeSeparation sandbox
-#PermitUserEnvironment no
+PermitUserEnvironment no
 #Compression delayed
-#ClientAliveInterval 0
-#ClientAliveCountMax 3
+ClientAliveInterval 0
+ClientAliveCountMax 3
 UseDNS no
 #PidFile /run/sshd.pid
-#MaxStartups 10:30:100
-#PermitTunnel no
-#ChrootDirectory none
-#VersionAddendum none
+PermitTunnel yes
+ChrootDirectory none
+VersionAddendum none
 
 # no default banner path
 Banner none
@@ -115,7 +106,6 @@ Subsystem	sftp	/usr/lib/ssh/sftp-server -l VERBOSE
 
 # buffer size for hpn to non-hpn connections
 #HPNBufferSize 2048
-
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
