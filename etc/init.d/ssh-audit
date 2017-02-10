@@ -1,0 +1,13 @@
+#!/bin/bash 
+
+if [ "${SSH_AUDIT_ENABLED}" == "true" ]; then
+  echo "- Enabling SSH Audit Logs"
+  mkdir -p ${SSH_AUDIT_DIR}
+  chmod 733 ${SSH_AUDIT_DIR}
+  chmod 755 /etc/enforce.d/recorder
+  env | grep "^SSH_AUDIT_" > /etc/recorder
+else
+  echo "- Disabling SSH Audit Logs"
+fi
+
+

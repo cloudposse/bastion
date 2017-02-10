@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ -f /etc/recorder ]; then
+  . /etc/recorder
+else
+  echo "Recorder misconfigured"
+  exit 1
+fi
+
+NOW=$(date -u "+%Y%m%d_%H%M%SZ")
+
+SSH_CLIENT_IP=$(expr match "$SSH_CLIENT" '\([0-9]\+\.[0-9]\+.[0-9]\+.[0-9]\+\)')
+SSH_TERM="tty${SSH_TTY##*/}"
+if [ "$SSH_TERM" == "tty" ]; then
+  SSH_TERM="cmd"
+fi
+SSH_AUDIT_LOG="${SSH_AUDIT_DIR}/${USER}@${SSH_CLIENT_IP}_${SSH_TERM}_${NOW}_$$"
+
+# Check that log directory exists and is writeable
+if [ ! -d "$SSH_AUDIT_DIR" ] || [ ! -w "$SSH_AUDIT_DIR" ]; then
+  echo "SSH Access Unavailable"
+  exit 1
+fi
+
+# Do not log SCP transcript
+if [[ "$SSH_ORIGINAL_COMMAND" =~ scp[[:space:]]+.* ]]; then
+  # Only log scp command
+  echo "$SSH_ORIGINAL_COMMAND" >> ${SSH_AUDIT_LOG}.log
+  exec $SSH_ORIGINAL_COMMAND
+else 
+  # Record the raw TTY session
+  SSH_ORIGINAL_COMMAND=${SSH_ORIGINAL_COMMAND:-/bin/bash -l}
+  echo "$SSH_ORIGINAL_COMMAND" >> ${SSH_AUDIT_LOG}.log
+  exec script -qf --timing=${SSH_AUDIT_LOG}.timing ${SSH_AUDIT_LOG}.session --command="${SSH_ORIGINAL_COMMAND}"
+fi

@@ -1,0 +1,14 @@
+#!/bin/bash 
+
+if [ "${ENFORCER_ENABLED}" == "true" ]; then
+  echo "- Enabling Enforcer"
+  env | grep "^ENFORCER_" > /etc/enforcer
+  echo "ForceCommand /usr/bin/enforcer" >> /etc/ssh/sshd_config
+fi
+
+if [ "${ENFORCER_ACLS_ENABLED}" == "true" ]; then
+  echo "- Enabling Enforcer ACLs"
+  chmod 755 /etc/enforce.d/acls
+fi
+
+

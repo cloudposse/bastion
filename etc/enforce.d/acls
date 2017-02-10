@@ -1,0 +1,9 @@
+. /etc/enforcer
+
+if [ "${ENFORCER_ACLS_PERMIT_SCP}" != "true" ]; then
+  if [[ "$SSH_ORIGINAL_COMMAND" =~ scp[[:space:]]+.* ]]; then
+    echo "Forbidden"
+    exit 1
+  fi
+fi
+

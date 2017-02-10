@@ -1,0 +1,21 @@
+until [ -f .google_authenticator ]; do
+  if [[ "$SSH_ORIGINAL_COMMAND" =~ scp[[:space:]]+.* ]]; then
+    echo "MFA setup required"
+    exit 1
+  else 
+    echo -e "\nWelcome $USER. Please follow the prompts to setup your MFA device..."
+    umask 0066
+    google-authenticator
+    if [ $? -ne 0 ]; then
+      echo "MFA setup failed"
+      exit 1;
+    fi
+
+    if [ -f .google_authenticator ]; then
+      chmod 600 .google_authenticator
+      echo "MFA enabled for $USER"
+    else
+      echo "MFA setup is mandatory"
+    fi
+  fi
+done
