@@ -3,7 +3,10 @@
 if [ "${RATE_LIMIT_ENABLED}" ]; then
   echo "- Enabling Rate Limits"
   echo "- Users will be locked for ${RATE_LIMIT_LOCKOUT_TIME}s after ${RATE_LIMIT_MAX_FAILURES} failed logins"
-  echo -e "#%PAM-1.0\nauth     required     pam_tally2.so audit onerr=fail deny=${RATE_LIMIT_MAX_FAILURES} even_deny_root unlock_time=${RATE_LIMIT_LOCKOUT_TIME}" > /etc/pam.d/rate-limit
+  echo "- Fail delay of ${RATE_LIMIT_FAIL_DELAY} micro-seconds"
+  echo "#%PAM-1.0" > /etc/pam.d/rate-limit
+  echo "auth  required  pam_tally2.so     audit onerr=fail deny=${RATE_LIMIT_MAX_FAILURES} even_deny_root unlock_time=${RATE_LIMIT_LOCKOUT_TIME}" >> /etc/pam.d/rate-limit
+  echo "auth  optional  pam_faildelay.so  delay=${RATE_LIMIT_FAIL_DELAY}" >> /etc/pam.d/rate-limit
 else
   echo "- Disabling Rate Limits"
   echo "#%PAM-1.0" > /etc/pam.d/rate-limit

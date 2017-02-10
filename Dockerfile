@@ -3,11 +3,15 @@ MAINTAINER Erik Osterman "erik@cloudposse.com"
 
 USER root
 
-ARG OPENSSH_VERSION=V_7_1_P1
+ARG OPENSSH_VERSION=V_7_4_P1
 
 RUN apk --update add linux-pam libssl1.0 ca-certificates openssl && \
     update-ca-certificates && \
     ln -s /lib /lib64
+
+ADD patches/ /usr/src/patches/
+
+# Building OpenSSH on alpine: http://git.alpinelinux.org/cgit/aports/tree/main/openssh/APKBUILD 
 
 RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget && \
     mkdir -p /usr/src && \
@@ -31,6 +35,7 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
     ( git clone https://github.com/openssh/openssh-portable.git /usr/src/openssh && \
       cd /usr/src/openssh && \
       git checkout ${OPENSSH_VERSION} && \
+      find ../patches/openssh -type f | xargs -n 1 patch -p1 -i && \
       sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h && \
       sed -i -E 's/OpenSSH_[0-9.]+/SERVER/' version.h && \
       autoreconf && \
@@ -46,7 +51,6 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
           --with-privsep-user=sshd \
           --with-md5-passwords \
           --with-ssl-engine \
-          --with-cflags="-D _FORTIFY_STDLIB_H" \
           --disable-wtmp \
           --with-pam && \
       make && \
@@ -83,9 +87,16 @@ ENV ENFORCER_ACLS_PERMIT_SCP true
 ENV SSH_AUDIT_ENABLED true
 ENV SSH_AUDIT_DIR=/var/log/ssh
 
+# Enable Rate Limiting
 ENV RATE_LIMIT_ENABLED true
-ENV RATE_LIMIT_MAX_FAILURES 3
-ENV RATE_LIMIT_LOCKOUT_TIME 60
+
+# Tolerate 5 consecutive fairues    
+ENV RATE_LIMIT_MAX_FAILURES 5
+
+# Lock accounts out for 300 seconds (5 minutes) after repeated failures
+ENV RATE_LIMIT_LOCKOUT_TIME 300
+# Sleep N microseconds between failed attempts
+ENV RATE_LIMIT_FAIL_DELAY 3000000
 
 ADD etc/ /etc/
 ADD enforcer /usr/bin
