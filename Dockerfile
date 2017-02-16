@@ -100,9 +100,7 @@ ENV RATE_LIMIT_LOCKOUT_TIME 300
 # Sleep N microseconds between failed attempts
 ENV RATE_LIMIT_FAIL_DELAY 3000000
 
-ADD etc/ /etc/
-ADD enforcer /usr/bin
-ADD init /
+ADD rootfs/ /
 
 EXPOSE 22
 
