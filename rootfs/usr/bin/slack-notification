@@ -8,7 +8,7 @@ export SSH_USER="${USER}"
 export SSH_CLIENT_IP="$(expr match "$SSH_CLIENT" '\([0-9]\+\.[0-9]\+.[0-9]\+.[0-9]\+\)')"
 export SSH_TERM="tty${SSH_TTY##*/}"
 if [ "${SSH_TERM}" == "tty" ]; then
-  export SSH_TERM="none"
+  export SSH_TERM="notty"
 fi
 export SLACK_USERNAME="${SLACK_USERNAME:-ssh-bot}"
 export SLACK_TIMEOUT="${SLACK_TIMEOUT:-2}"
