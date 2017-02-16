@@ -21,4 +21,4 @@ deps:
 
 run: 
 	ssh-keygen -R '[localhost]:1234'
-	docker run -it -p1234:22 -v ~/.ssh/:/root/.ssh/ -e MFA_PROVIDER=google-authenticator --entrypoint=/bin/bash $(DOCKER_IMAGE_NAME)
+	docker run -it -p1234:22 -v ~/.ssh/:/root/.ssh/ --env-file=../.secrets -e MFA_PROVIDER=google-authenticator --entrypoint=/bin/bash $(DOCKER_IMAGE_NAME)

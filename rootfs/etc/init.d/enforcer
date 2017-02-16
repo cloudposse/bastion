@@ -8,7 +8,11 @@ fi
 
 if [ "${ENFORCER_ACLS_ENABLED}" == "true" ]; then
   echo "- Enabling Enforcer ACLs"
-  chmod 755 /etc/enforce.d/acls
+  chmod 755 /etc/enforce.d/?.acls
 fi
 
-
+if [ "${ENFORCER_SLACK_ENABLED}" == "true" ]; then
+  echo "- Enabling Slack Notifications"
+  env | grep "^SLACK_" > /etc/slack
+  chmod 755 /etc/enforce.d/?.slack
+fi

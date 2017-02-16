@@ -68,12 +68,13 @@ RUN apk --update add curl drill groff util-linux bash xauth heimdal-telnet gette
   mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
 
 # System ENV
-ENV TIMEZONE Etc/UTC
-ENV TERM xterm
+ENV TIMEZONE=Etc/UTC
+ENV TERM=xterm
+ENV HOSTNAME=bastion
 
-ENV MFA_PROVIDER duo
+ENV MFA_PROVIDER=duo
 
-ENV UMASK 0022
+ENV UMASK=0022
 
 ENV DUO_IKEY=
 ENV DUO_SKEY=
@@ -82,23 +83,32 @@ ENV DUO_FAILMODE=secure
 ENV DUO_AUTOPUSH=yes
 ENV DUO_PROMPTS=1
 
-ENV ENFORCER_ENABLED true
-ENV ENFORCER_ACLS_ENABLED true
-ENV ENFORCER_ACLS_PERMIT_SCP true
+ENV ENFORCER_ENABLED=true
+ENV ENFORCER_ACLS_ENABLED=true
+ENV ENFORCER_ACLS_PERMIT_SCP=true
+ENV ENFORCER_SLACK_ENABLED=true
 
-ENV SSH_AUDIT_ENABLED true
+ENV SSH_AUDIT_ENABLED=true
 ENV SSH_AUDIT_DIR=/var/log/ssh
 
 # Enable Rate Limiting
-ENV RATE_LIMIT_ENABLED true
+ENV RATE_LIMIT_ENABLED=true
 
 # Tolerate 5 consecutive fairues    
-ENV RATE_LIMIT_MAX_FAILURES 5
+ENV RATE_LIMIT_MAX_FAILURES=5
 
 # Lock accounts out for 300 seconds (5 minutes) after repeated failures
-ENV RATE_LIMIT_LOCKOUT_TIME 300
+ENV RATE_LIMIT_LOCKOUT_TIME=300
 # Sleep N microseconds between failed attempts
-ENV RATE_LIMIT_FAIL_DELAY 3000000
+ENV RATE_LIMIT_FAIL_DELAY=3000000
+
+#
+# Slack
+#
+ENV SLACK_WEBHOOK_URL=
+ENV SLACK_USERNAME=ssh-bot
+ENV SLACK_TIMEOUT=2
+ENV SLACK_FATAL_ERRORS=true
 
 ADD rootfs/ /
 
