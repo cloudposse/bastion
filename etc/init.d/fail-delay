@@ -1,2 +1,0 @@
-auth  optional  pam_faildelay.so  delay=10000000
-
