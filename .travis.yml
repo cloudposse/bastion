@@ -5,13 +5,28 @@ addons:
     - git
     - make
     - curl
+
 env:
   - DOCKER_IMAGE_NAME=cloudposse/bastion
+
 services:
 - docker
+
 install:
 - make init
 - make docker:login
+# Travis has a default umask of 0002 before executing `git clone`. 
+# There is no workaround. Even git does not track directory modes.
+# This has the unforunate consequance of granting g+rw to any directory we `ADD`. 
+- chmod 755 / \
+            /usr \ 
+            /usr/bin \
+            /etc \
+            /etc/init.d \
+            /etc/profile.d \
+            /etc/pam.d \
+            /etc/ssh \
+            /etc/enforce.d
 
 script:
 - make docker:build
