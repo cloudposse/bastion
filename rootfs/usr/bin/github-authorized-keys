@@ -1,0 +1,9 @@
+#!/bin/sh
+set -ue
+API_URL="${API_URL:-http://localhost:301/user/%s/authorized_keys}"
+if [ -n "$1" ]; then
+  exec curl --silent --fail $(printf "$API_URL" "$1")
+else
+  echo "Usage: $0 [github username]"
+fi
+

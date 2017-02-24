@@ -3,21 +3,9 @@ export DOCKER_TAG ?= dev
 export DOCKER_IMAGE_NAME ?= $(DOCKER_IMAGE):$(DOCKER_TAG)
 export DOCKER_BUILD_FLAGS = 
 
-SHELL = /bin/bash
-export BUILD_HARNESS_PATH ?= $(shell until [ -d "build-harness" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/build-harness
--include $(BUILD_HARNESS_PATH)/Makefile
+include $(shell curl --silent -O "https://raw.githubusercontent.com/cloudposse/build-harness/master/templates/Makefile.build-harness"; echo Makefile.build-harness)
 
 COPYRIGHT_SOFTWARE_DESCRIPTION := A secure Bastion host implemented as Docker Container running Alpine Linux with Google Authenticator & DUO MFA support
-
-.PHONY : init
-## Init build-harness
-init:
-	@curl --retry 5 --retry-delay 1 https://raw.githubusercontent.com/cloudposse/build-harness/master/bin/install.sh | bash
-
-.PHONY : deps
-## Instal deps
-deps:
-	@exit 0
 
 run: 
 	ssh-keygen -R '[localhost]:1234'

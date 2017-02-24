@@ -3,7 +3,8 @@
 if [ "${ENFORCER_ENABLED}" == "true" ]; then
   echo "- Enabling Enforcer"
   env | grep "^ENFORCER_" > /etc/enforcer
-  echo "ForceCommand /usr/bin/enforcer" >> /etc/ssh/sshd_config
+  grep -q "ForceCommand /usr/bin/enforcer" /etc/ssh/sshd_config || \
+    echo "ForceCommand /usr/bin/enforcer" >> /etc/ssh/sshd_config
 fi
 
 if [ "${ENFORCER_ACLS_ENABLED}" == "true" ]; then
