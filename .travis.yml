@@ -18,15 +18,15 @@ install:
 # Travis has a default umask of 0002 before executing `git clone`. 
 # There is no workaround. Even git does not track directory modes.
 # This has the unforunate consequance of granting g+rw to any directory we `ADD`. 
-- chmod 755 rootfs/ \
-            rootfs/usr \ 
-            rootfs/usr/bin \
-            rootfs/etc \
-            rootfs/etc/init.d \
-            rootfs/etc/profile.d \
-            rootfs/etc/pam.d \
-            rootfs/etc/ssh \
-            rootfs/etc/enforce.d
+- chmod 755 rootfs
+- chmod 755 rootfs/usr
+- chmod 755 rootfs/usr/bin
+- chmod 755 rootfs/etc
+- chmod 755 rootfs/etc/init.d
+- chmod 755 rootfs/etc/profile.d
+- chmod 755 rootfs/etc/pam.d
+- chmod 755 rootfs/etc/ssh
+- chmod 755 rootfs/etc/enforce.d
 
 script:
 - make docker:build
