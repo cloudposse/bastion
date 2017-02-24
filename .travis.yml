@@ -11,6 +11,7 @@ services:
 - docker
 install:
 - make init
+- git -C build-harness checkout permission-reset
 - make docker:login
 
 script:
