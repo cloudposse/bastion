@@ -1,30 +1,10 @@
-#	$OpenBSD: sshd_config,v 1.98 2016/02/17 05:29:04 djm Exp $
-
-# This is the sshd server system-wide configuration file.  See
-# sshd_config(5) for more information.
-
-# This sshd was compiled with PATH=/bin:/usr/bin:/sbin:/usr/sbin
-
-# The strategy used for options in the default sshd_config shipped with
-# OpenSSH is to specify options with their default value where
-# possible, but leave them commented.  Uncommented options override the
-# default value.
-
 Port 22
 AddressFamily any
 ListenAddress 0.0.0.0
 ListenAddress ::
 
-# The default requires explicit activation of protocol 1
 Protocol 2
-
-# HostKey for protocol version 1
-#HostKey /etc/ssh/ssh_host_key
-# HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
-#HostKey /etc/ssh/ssh_host_ed25519_key
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
@@ -54,9 +34,6 @@ AuthorizedKeysFile	.ssh/authorized_keys
 
 #AuthorizedPrincipalsFile none
 
-#AuthorizedKeysCommand none
-#AuthorizedKeysCommandUser nobody
-
 # Don't read the user's ~/.rhosts and ~/.shosts files
 IgnoreRhosts yes
 
@@ -73,8 +50,6 @@ AllowAgentForwarding yes
 AllowTcpForwarding no
 GatewayPorts no
 X11Forwarding no
-#X11DisplayOffset 10
-#X11UseLocalhost yes
 PermitTTY yes
 PrintMotd no
 PrintLastLog yes

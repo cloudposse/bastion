@@ -14,7 +14,6 @@ install:
 - make docker:login
 
 script:
-- make deps
 - make docker:build
 
 after_success:
