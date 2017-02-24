@@ -118,6 +118,20 @@ ENV SSH_AUTHORIZED_KEYS_COMMAND_USER=nobody
 
 ADD rootfs/ /
 
+# Some build systems, namely Travis, have a default umask of 0002 before executing `git clone`. 
+# There is no workaround. Even git does not track directory modes.
+# This has the unforunate consequance of granting g+rw to any directory we `ADD`. 
+RUN chmod 755 / \
+              /usr \ 
+              /usr/bin \
+              /etc \
+              /etc/init.d \
+              /etc/profile.d \
+              /etc/pam.d \
+              /etc/ssh \
+              /etc/enforce.d
+
+
 EXPOSE 22
 
 ENTRYPOINT ["/init"]
