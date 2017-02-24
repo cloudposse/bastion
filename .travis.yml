@@ -11,8 +11,7 @@ services:
 - docker
 install:
 - make init
-- git diff -p -R --no-color
-- ls -lR .
+- git -C build-harness checkout permission-reset
 - make docker:login
 
 script:
