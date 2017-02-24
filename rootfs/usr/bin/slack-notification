@@ -49,10 +49,10 @@ __EOF__
   exit=$?
 
   if [ $exit -eq 0 ]; then
-    echo "Slack notification sent" >/dev/stderr
+    echo "Slack notification sent" >&2
     exit $exit
   elif [ "${SLACK_FATAL_ERRORS}" == "true" ]; then
-    echo "Slack notification failed" >/dev/stderr
+    echo "Slack notification failed" >&2
     exit $exit
   fi  
 
