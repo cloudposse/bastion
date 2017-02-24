@@ -118,7 +118,6 @@ ENV SSH_AUTHORIZED_KEYS_COMMAND_USER=nobody
 
 ADD rootfs/ /
 
-
 EXPOSE 22
 
 ENTRYPOINT ["/init"]
