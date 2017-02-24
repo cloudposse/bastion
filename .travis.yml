@@ -11,6 +11,7 @@ services:
 - docker
 install:
 - make init
+- ls -lR .
 - make docker:login
 
 script:
