@@ -11,6 +11,7 @@ services:
 - docker
 install:
 - make init
+- git diff -p -R --no-color | grep -E "^(diff|(old|new) mode)" --color=never | git apply
 - ls -lR .
 - make docker:login
 
