@@ -100,7 +100,7 @@ $ make docker:build
 
 * Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs in `/var/log/sudo-io`
 * Use this more as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
-* Sync the contents of `SSH_AUDIT_DIR` to some remote, offsite location. If using S3, we recommend enabling bucket-versioning.
+* Sync the contents of `/var/log/sudo-io` to some remote, offsite location. If using S3, we recommend enabling bucket-versioning.
 
 #### Environment Variables
 
