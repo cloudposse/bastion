@@ -99,8 +99,11 @@ $ make docker:build
 ## Recommendations
 
 * Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs in `/var/log/sudo-io`
-* Use this more as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
-* Sync the contents of `/var/log/sudo-io` to some remote, offsite location. If using S3, we recommend enabling bucket-versioning.
+* Use the bastion as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
+* Sync the contents of `/var/log/sudo-io` to a remote, offsite location. If using S3, we recommend enabling bucket-versioning.
+* Use [`github-authorized-keys](https://github.com/cloudposse/github-authorized-keys/) to automatically provision users; or use the [Helm chart](https://github.com/cloudposse/charts/tree/master/incubator/bastion).
+* Bind-mount `/etc/passwd`, `/etc/shadow` and `/etc/group` into the container as *read-only*
+* Bind-mount `/home` into container; the bastion does not manage authorized keys
 
 #### Environment Variables
 
