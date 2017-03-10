@@ -59,13 +59,17 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
     apk del .build-deps && \
     rm -rf /var/cache/apk/*
 
-RUN apk --update add curl drill groff util-linux bash xauth heimdal-telnet gettext && \
+RUN apk --update add curl drill groff util-linux bash xauth heimdal-telnet gettext sudo && \
   rm -rf /etc/ssh/ssh_host_*_key* && \
   rm -f /usr/bin/ssh-agent && \
   rm -f /usr/bin/ssh-keyscan && \
   touch /var/log/lastlog && \
   mkdir -p /var/run/sshd && \
   mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
+
+ENV SUDOSH_VERSION=0.1.3
+ADD https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 /usr/bin/sudosh
+RUN chmod 755 /usr/bin/sudosh
 
 # System ENV
 ENV TIMEZONE=Etc/UTC
@@ -89,7 +93,6 @@ ENV ENFORCER_ACLS_PERMIT_SCP=true
 ENV ENFORCER_SLACK_ENABLED=false
 
 ENV SSH_AUDIT_ENABLED=true
-ENV SSH_AUDIT_DIR=/var/log/ssh
 
 # Enable Rate Limiting
 ENV RATE_LIMIT_ENABLED=true
