@@ -151,6 +151,12 @@ The SSH auditor uses [`sudosh`](https://github.com/cloudposse/sudosh/) to record
 |-----------------------|:----------------------------------------------------|:------------:|
 | `SSH_AUDIT_ENABLED`   |  Enable the SSH Audit facility                      | true         |
 
+This will require that users login with the `/usr/bin/sudosh` shell.
+
+Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`.
+
+Use the `sudoreplay` command to audit/replay sessions.
+
 
 #### User Accounts & SSH Keys
 
