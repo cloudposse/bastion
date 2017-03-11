@@ -142,6 +142,17 @@ The enforcer ensures certain conditions are satisfied. Currently, these options 
 | `ENFORCER_ACLS_ENABLED`    |  Enable enforcement of ACLs                         | true     |
 | `ENFORCER_ACLS_PERMIT_SCP` |  Permit SCP access                                  | true     |
 
+##### Slack Notifications
+
+The enforcer is able to send notifications to a slack channel anytime there is an SSH login.
+
+| ENV                        |      Description                                    |  Default |
+|----------------------------|:----------------------------------------------------|:--------:|
+| `SLACK_WEBHOOK_URL`        | Webhook URL                                         |          |
+| `SLACK_USERNAME`           | Slack handle of bot                                 | ssh-bot  |
+| `SLACK_TIMEOUT`            | Request timeout                                     | 2        |
+| `SLACK_FATAL_ERRORS`       | Deny logins if slack notificaiton fails             | true     |
+
 
 ##### SSH Auditor
 
