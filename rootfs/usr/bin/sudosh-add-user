@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+USERNAME="${1}"
+SHELL="${2:-/usr/bin/sudosh}"
+GROUP="${3:-}"
+
+if [ -z "${USERNAME}" ]; then
+  echo "Usage: $0 [username] [shell] [group]"
+  exit 1
+fi
+
+if [ -z "${GROUP}" ]; then
+  adduser -D -s "${SHELL}" "${USERNAME}" 
+else
+  adduser -D -s "${SHELL}" -G "${GROUP}" "${USERNAME}" 
+fi
+
+echo "${USERNAME} ALL=(${USERNAME}) ALL" > "/etc/sudoers.d/${USERNAME}"
