@@ -2,8 +2,9 @@
 
 if [ "${MFA_PROVIDER}" == "duo" ]; then
   echo "- Enabling DUO MFA"
-  echo -e "#%PAM-1.0\nauth      sufficient  pam_duo.so conf=/etc/pam_duo.conf" > /etc/pam.d/mfa
-  echo "auth       optional    pam_echo.so file=/etc/auth-failure.txt" >> /etc/pam.d/mfa
+  echo "#%PAM-1.0"
+  echo "auth      sufficient  pam_duo.so  conf=/etc/pam_duo.conf" > /etc/pam.d/mfa
+  echo "auth      optional    pam_echo.so file=/etc/auth-failure.txt" >> /etc/pam.d/mfa
   if [ -z "${DUO_IKEY}" ]; then
     echo "DUO_IKEY not defined"
     exit 1;
