@@ -14,6 +14,10 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 [![License](https://img.shields.io/badge/license-APACHE%202.0%20-brightgreen.svg)](https://github.com/cloudposse/bastion/blob/master/LICENSE)
 
 
+![Demo 1](docs/demo.gif)
+![Demo 2](docs/slack.png)
+
+
 ## Table of Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
