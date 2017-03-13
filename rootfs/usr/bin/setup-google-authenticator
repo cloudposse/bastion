@@ -1,5 +1,19 @@
-until [ -f .google_authenticator ]; do
-  if [[ "$SSH_ORIGINAL_COMMAND" =~ scp[[:space:]]+.* ]]; then
+#!/bin/bash 
+
+function _sigint() {
+  echo -e '\nAborted'
+  exit 1
+}
+
+trap _sigint SIGINT
+
+if ! [ -t 1 ]; then
+  echo "MFA setup required"
+  exit 1
+fi
+
+until [ -f "${HOME}/.google_authenticator" ]; do
+  if [[ "$SSH_ORIGINAL_COMMAND" =~ ^(rsync|nc|scp) ]]; then
     echo "MFA setup required"
     exit 1
   else 
@@ -19,3 +33,5 @@ until [ -f .google_authenticator ]; do
     fi
   fi
 done
+
+trap - SIGINT

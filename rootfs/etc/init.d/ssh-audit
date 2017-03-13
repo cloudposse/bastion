@@ -2,16 +2,18 @@
 
 if [ "${SSH_AUDIT_ENABLED}" == "true" ]; then
 	echo "- Enabling SSH Audit Logs"
-	cat <<-EOF >/etc/sudoers.d/audit-logs
+	cat <<-EOF >/etc/sudoers.d/sudosh
 		Defaults log_output
 		Defaults!/usr/bin/sudoreplay !log_output
-		Defaults!/usr/local/bin/sudoreplay !log_output
 		Defaults!REBOOT !log_output
 	EOF
 	echo "# valid login shells" > /etc/shells
 	echo "/usr/bin/sudosh" >> /etc/shells
+	echo "session requisite pam_exec.so quiet /usr/bin/sudosh-add-user" > /etc/pam.d/sudosh
+	chsh -s /usr/bin/sudosh root
 else
 	echo "- Disabling SSH Audit Logs"
+	:>/etc/pam.d/sudosh
 fi
 
 

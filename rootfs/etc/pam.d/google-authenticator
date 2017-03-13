@@ -1,0 +1,2 @@
+#%PAM-1.0
+auth requisite pam_google_authenticator.so nullok

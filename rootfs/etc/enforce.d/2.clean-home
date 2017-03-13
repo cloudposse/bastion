@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "${PAM_USER}" ]; then
+  echo "ERROR: invalid execution"
+  exit 1
+fi
+
+HOME=$(getent passwd ${PAM_USER} | cut -d: -f6)
+
+# Delete all dot files in user's home directory to prevent them from influencing the session
+if [ -d "${HOME}" ]; then
+  find "${HOME}" -maxdepth 1 -type f -name '.*' '!' -name '.google_authenticator' | xargs --no-run-if-empty rm -f
+  rm -f "${HOME}/.ssh/rc"
+fi

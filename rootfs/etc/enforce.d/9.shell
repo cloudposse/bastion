@@ -1,9 +1,0 @@
-#!/bin/bash
-
-SHELL=${SHELL:-/bin/bash}
-
-if [ -z "${SSH_ORIGINAL_COMMAND}" ]; then
-  SSH_ORIGINAL_COMMAND="${SHELL} -l"
-fi
-
-exec ${SSH_ORIGINAL_COMMAND}

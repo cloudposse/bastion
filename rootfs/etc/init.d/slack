@@ -1,0 +1,7 @@
+if [ "${SLACK_ENABLED}" == "true" ]; then
+  echo "- Enabling Slack Notifications"
+  env | grep "^SLACK_" > /etc/slack/env
+  ln -sf /usr/bin/slack-notification /etc/ssh/sshrc.d/slack-notification
+fi
+
+
