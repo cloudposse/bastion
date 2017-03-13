@@ -139,11 +139,10 @@ Google Authenticator is a free & open source MFA solution. It's less secure than
 
 The enforcer ensures certain conditions are satisfied. Currently, these options are supported.
 
-| ENV                        |      Description                                    |  Default |
-|----------------------------|:----------------------------------------------------|:--------:|
-| `ENFORCER_ENABLED`         |  Enable general enforcement                         | true     |
-| `ENFORCER_ACLS_ENABLED`    |  Enable enforcement of ACLs                         | true     |
-| `ENFORCER_ACLS_PERMIT_SCP` |  Permit SCP access                                  | true     |
+| ENV                           |  Description                                                 |  Default |
+|-------------------------------|:-------------------------------------------------------------|:--------:|
+| `ENFORCER_ENABLED`            |  Enable general enforcement                                  | true     |
+| `ENFORCER_CLEAN_HOME_ENABLED` |  Erase dot files in home directory before starting session   | true     |
 
 ##### SSH Auditor
 

@@ -9,11 +9,6 @@ else
   :>/etc/pam.d/enforcer
 fi
 
-if [ "${ENFORCER_ACLS_ENABLED}" == "true" ]; then
-  echo "- Enabling Enforcer ACLs"
-  chmod 755 /etc/enforce.d/?.acls
-fi
-
 if [ "${ENFORCER_CLEAN_HOME_ENABLED}" == "true" ]; then
   echo "- Enabling Clean Home"
   chmod 755 /etc/enforce.d/?.clean-home
