@@ -22,6 +22,7 @@ HostKey /etc/ssh/ssh_host_rsa_key
 
 LoginGraceTime 2m
 PermitRootLogin yes
+PermitUserRC no
 StrictModes yes
 MaxAuthTries 6
 MaxSessions 10
