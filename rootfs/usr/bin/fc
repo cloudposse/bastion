@@ -12,7 +12,7 @@ trap _sigint SIGINT
 
 for script in /etc/fc.d/* ; do
   if [ -r $script ] && [ -x $script ]; then
-    $script
+    . $script
     if [ $? -ne 0 ]; then
       echo "Access denied"
       exit 1
