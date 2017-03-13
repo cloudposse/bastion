@@ -1,12 +1,5 @@
 #!/bin/bash 
 
-function _sigint() {
-  echo -e '\nAborted'
-  exit 1
-}
-
-trap _sigint SIGINT
-
 if ! [ -t 1 ]; then
   echo "MFA setup required"
   exit 1

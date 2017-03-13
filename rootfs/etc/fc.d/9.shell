@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -n "${SSH_ORIGINAL_COMMAND}" ]; then
+  exec ${SSH_ORIGINAL_COMMAND}
+else
+  exec ${SHELL} -l
+fi

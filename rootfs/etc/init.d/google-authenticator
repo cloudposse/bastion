@@ -4,5 +4,5 @@ if [ "${MFA_PROVIDER}" == "google-authenticator" ]; then
   echo "- Enabling Google Authenticator MFA"
   echo "#%PAM-1.0" > /etc/pam.d/mfa
   echo "auth include google-authenticator" >> /etc/pam.d/mfa
-  ln -sf /usr/bin/setup-google-authenticator /etc/profile.d/setup-google-authenticator
+  ln -sf /usr/bin/setup-google-authenticator /etc/fc.d/0.setup-google-authenticator
 fi
