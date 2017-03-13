@@ -6,4 +6,5 @@ if [ -z "${PAM_USER}" ]; then
   exit 1
 fi
 
+# Allow users to sudo to themselves; this does NOT allow root access
 echo "${PAM_USER} ALL=(${PAM_USER}) ALL" > "/etc/sudoers.d/sudosh.${PAM_USER}"
