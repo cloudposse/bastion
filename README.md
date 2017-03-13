@@ -1,14 +1,11 @@
-# Secure Bastion with MFA
+# Secure Bastion with MFA [![Build Status](https://travis-ci.org/cloudposse/bastion.svg)](https://travis-ci.org/cloudposse/bastion)
 
 This is a secure/locked-down bastion implemented as a Docker Container. It uses Alpine Linux as the base image and ships with support for Google Authenticator & DUO MFA support.
 
 It was designed to be used on Kubernetes together with [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provide secure remote access to production clusters.
 
-
-
 [![Docker Stars](https://img.shields.io/docker/stars/cloudposse/bastion.svg)](https://hub.docker.com/r/cloudposse/bastion)
 [![Docker Pulls](https://img.shields.io/docker/pulls/cloudposse/bastion.svg)](https://hub.docker.com/r/cloudposse/bastion)
-[![Build Status](https://travis-ci.org/cloudposse/bastion.svg?branch=master)](https://travis-ci.org/cloudposse/bastion)
 [![GitHub Stars](https://img.shields.io/github/stars/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/stargazers) 
 [![GitHub Issues](https://img.shields.io/github/issues/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/issues)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/cloudposse/bastion.svg)](http://isitmaintained.com/project/cloudposse/bastion "Average time to resolve an issue")
@@ -130,9 +127,9 @@ Duo is a enterprise MFA provider that is very affordable. Details here: https://
 Google Authenticator is a free & open source MFA solution. It's less secure than Duo because tokens are stored on the server under each user account.
 
 
-| ENV               |      Description                                    |  Default            |
-|-------------------|:----------------------------------------------------|:-------------------:|
-| `MFA_PROVIDER`    |  Enable the Google Authenticator provider           | google-authenticator|  
+| ENV               |      Description                                    |  Default              |
+|-------------------|:----------------------------------------------------|:---------------------:|
+| `MFA_PROVIDER`    |  Enable the Google Authenticator provider           | google-authenticator  |  
 
 
 ##### Enforcer Settings
@@ -141,8 +138,21 @@ The enforcer ensures certain conditions are satisfied. Currently, these options 
 
 | ENV                           |  Description                                                 |  Default |
 |-------------------------------|:-------------------------------------------------------------|:--------:|
-| `ENFORCER_ENABLED`            |  Enable general enforcement                                  | true     |
-| `ENFORCER_CLEAN_HOME_ENABLED` |  Erase dot files in home directory before starting session   | true     |
+| `ENFORCER_ENABLED`            |  Enable general enforcement                                  | `true`   |
+| `ENFORCER_CLEAN_HOME_ENABLED` |  Erase dot files in home directory before starting session   | `true`   |
+
+##### Slack Notifications
+
+The enforcer is able to send notifications to a slack channel anytime there is an SSH login.
+
+| ENV                        |      Description                                    |  Default  |
+|----------------------------|:----------------------------------------------------|:---------:|
+| `SLACK_HOOK`               | Slack integration method (e.g. `pam`, `sshrc`)      | `sshrc`   |
+| `SLACK_WEBHOOK_URL`        | Webhook URL                                         |           |
+| `SLACK_USERNAME`           | Slack handle of bot                                 | `ssh-bot` |
+| `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
+| `SLACK_FATAL_ERRORS`       | Deny logins if slack notificaiton fails             | `true`    |
+
 
 ##### SSH Auditor
 
@@ -151,11 +161,11 @@ The SSH auditor uses [`sudosh`](https://github.com/cloudposse/sudosh/) to record
 
 | ENV                   |      Description                                    |  Default     |
 |-----------------------|:----------------------------------------------------|:------------:|
-| `SSH_AUDIT_ENABLED`   |  Enable the SSH Audit facility                      | true         |
+| `SSH_AUDIT_ENABLED`   |  Enable the SSH Audit facility                      | `true`       |
 
 This will require that users login with the `/usr/bin/sudosh` shell.
 
-Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`.
+Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`. By default, `root` will automatically be updated to use `sudosh`.
 
 Use the `sudoreplay` command to audit/replay sessions.
 
