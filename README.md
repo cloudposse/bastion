@@ -234,7 +234,7 @@ or [hire us][hire] to help build your next cloud-platform.
   
 ### Contributors
 
-[![Erik Osterman](http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=144)](https://sindresorhus.com) 
+[![Erik Osterman](http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=144)](https://osterman.com/) 
 
 [Erik Osterman](https://github.com/osterman) 
 
