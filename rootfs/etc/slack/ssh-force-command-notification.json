@@ -4,6 +4,7 @@
     { "mrkdwn_in": ["text", "pretext", "fallback", "title"], 
       "title": "SSH login on ${HOSTNAME}", 
       "text": "```${SSH_ORIGINAL_COMMAND}```", 
+      "fallback": "login by ${SSH_USER}@${HOSTNAME} from ${SSH_CLIENT_IP}",
       "fields": [ 
         { "title": "User", 
           "value": "${SSH_USER}@${SSH_TERM}", 

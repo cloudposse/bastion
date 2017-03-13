@@ -22,12 +22,9 @@ if [ -n "${SSH_CLIENT}" ]; then
   fi
   export SSH_ORIGINAL_COMMAND="${SSH_ORIGINAL_COMMAND:-shell}"
   export SLACK_NOTIFICATION_TEMPLATE="${SLACK_NOTIFICATION_TEMPLATE:-/etc/slack/ssh-force-command-notification.json}"
-elif [ -n "${PAM_TYPE}" ]; then
+elif [ "${PAM_TYPE}" == "open_session" ]; then
   # Invoked as a PAM module
   export SLACK_NOTIFICATION_TEMPLATE="${SLACK_NOTIFICATION_TEMPLATE:-/etc/slack/pam-${PAM_TYPE}-notification.json}"
-  if [ "$PAM_TYPE" == "close_session" ]; then  
-	exit 0;
-  fi
 else
   echo "Unknown invocation" >&2
   exit 1
