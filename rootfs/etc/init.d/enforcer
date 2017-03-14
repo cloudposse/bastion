@@ -1,19 +1,15 @@
 #!/bin/bash 
+umask 0066
 
 if [ "${ENFORCER_ENABLED}" == "true" ]; then
   echo "- Enabling Enforcer"
   env | grep "^ENFORCER_" > /etc/enforcer
-  grep -q "ForceCommand /usr/bin/enforcer" /etc/ssh/sshd_config || \
-    echo "ForceCommand /usr/bin/enforcer" >> /etc/ssh/sshd_config
+  echo "session required pam_exec.so stdout quiet /usr/bin/enforcer" > /etc/pam.d/enforcer
+else
+  :>/etc/pam.d/enforcer
 fi
 
-if [ "${ENFORCER_ACLS_ENABLED}" == "true" ]; then
-  echo "- Enabling Enforcer ACLs"
-  chmod 755 /etc/enforce.d/?.acls
-fi
-
-if [ "${ENFORCER_SLACK_ENABLED}" == "true" ]; then
-  echo "- Enabling Slack Notifications"
-  env | grep "^SLACK_" > /etc/slack
-  chmod 755 /etc/enforce.d/?.slack
+if [ "${ENFORCER_CLEAN_HOME_ENABLED}" == "true" ]; then
+  echo "- Enabling Clean Home"
+  chmod 755 /etc/enforce.d/?.clean-home
 fi

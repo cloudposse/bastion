@@ -1,11 +1,10 @@
-export CHARSET=UTF-8
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-export PAGER=less
-export PS1='\h:\w\$ '
+#!/bin/bash
 
-for script in /etc/profile.d/* ; do
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+for script in /etc/ssh/sshrc.d/* ; do
   if [ -r $script ] ; then
-    . $script
+    $script
     if [ $? -ne 0 ]; then
       echo "Goodbye"
       exit 1

@@ -1,0 +1,13 @@
+diff --git a/pathnames.h b/pathnames.h
+index a8deb9f..02ee2ca 100644
+--- a/pathnames.h
++++ b/pathnames.h
+@@ -134,7 +134,7 @@
+ 
+ /* xauth for X11 forwarding */
+ #ifndef _PATH_XAUTH
+-#define _PATH_XAUTH			"/usr/X11R6/bin/xauth"
++#define _PATH_XAUTH			"/usr/bin/xauth"
+ #endif
+ 
+ /* UNIX domain socket for X11 server; displaynum will replace %u */

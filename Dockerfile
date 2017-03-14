@@ -1,11 +1,11 @@
-FROM alpine:latest
+FROM alpine:edge
 MAINTAINER Erik Osterman "erik@cloudposse.com"
 
 USER root
 
 ARG OPENSSH_VERSION=V_7_4_P1
 
-RUN apk --update add linux-pam libssl1.0 ca-certificates openssl && \
+RUN apk --update add linux-pam libssl1.0 shadow ca-certificates openssl && \
     update-ca-certificates && \
     ln -s /lib /lib64
 
@@ -13,7 +13,7 @@ ADD patches/ /usr/src/patches/
 
 # Building OpenSSH on alpine: http://git.alpinelinux.org/cgit/aports/tree/main/openssh/APKBUILD 
 
-RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget && \
+RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget && \
     mkdir -p /usr/src && \
     cd /usr/src && \
     ( wget https://dl.duosecurity.com/duo_unix-latest.tar.gz && \
@@ -36,8 +36,6 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
       cd /usr/src/openssh && \
       git checkout ${OPENSSH_VERSION} && \
       find ../patches/openssh -type f -exec patch -p1 -i {} \; && \
-      sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h && \
-      sed -i -E 's/OpenSSH_[0-9.]+/SERVER/' version.h && \
       autoreconf && \
       ./configure \
           --prefix=/usr \
@@ -59,13 +57,17 @@ RUN apk add --virtual .build-deps build-base automake autoconf libtool git linux
     apk del .build-deps && \
     rm -rf /var/cache/apk/*
 
-RUN apk --update add curl drill groff util-linux bash xauth heimdal-telnet gettext && \
+RUN apk --update add curl drill groff util-linux bash xauth gettext sudo && \
   rm -rf /etc/ssh/ssh_host_*_key* && \
   rm -f /usr/bin/ssh-agent && \
   rm -f /usr/bin/ssh-keyscan && \
   touch /var/log/lastlog && \
   mkdir -p /var/run/sshd && \
   mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
+
+ENV SUDOSH_VERSION=0.1.3
+ADD https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 /usr/bin/sudosh
+RUN chmod 755 /usr/bin/sudosh
 
 # System ENV
 ENV TIMEZONE=Etc/UTC
@@ -86,10 +88,9 @@ ENV DUO_PROMPTS=1
 ENV ENFORCER_ENABLED=true
 ENV ENFORCER_ACLS_ENABLED=true
 ENV ENFORCER_ACLS_PERMIT_SCP=true
-ENV ENFORCER_SLACK_ENABLED=false
+ENV ENFORCER_CLEAN_HOME_ENABLED=true
 
 ENV SSH_AUDIT_ENABLED=true
-ENV SSH_AUDIT_DIR=/var/log/ssh
 
 # Enable Rate Limiting
 ENV RATE_LIMIT_ENABLED=true
@@ -105,6 +106,8 @@ ENV RATE_LIMIT_FAIL_DELAY=3000000
 #
 # Slack
 #
+ENV SLACK_ENABLED=false
+ENV SLACK_HOOK=sshrc
 ENV SLACK_WEBHOOK_URL=
 ENV SLACK_USERNAME=ssh-bot
 ENV SLACK_TIMEOUT=2

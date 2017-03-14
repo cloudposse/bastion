@@ -22,7 +22,8 @@ HostKey /etc/ssh/ssh_host_rsa_key
 
 LoginGraceTime 2m
 PermitRootLogin yes
-StrictModes yes
+PermitUserRC no
+StrictModes no
 MaxAuthTries 6
 MaxSessions 10
 
@@ -81,6 +82,8 @@ Subsystem	sftp	/usr/lib/ssh/sftp-server -l VERBOSE
 
 # buffer size for hpn to non-hpn connections
 #HPNBufferSize 2048
+
+ForceCommand /usr/bin/fc
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs

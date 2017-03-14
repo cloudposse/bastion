@@ -1,60 +1,57 @@
 #!/bin/bash
 
-if [ -f /etc/slack ]; then
-  . /etc/slack
+if [ -f /etc/slack/env ]; then
+  . /etc/slack/env
 fi
 
-export SSH_USER="${USER}"
-export SSH_CLIENT_IP="$(expr match "$SSH_CLIENT" '\([0-9]\+\.[0-9]\+.[0-9]\+.[0-9]\+\)')"
-export SSH_TERM="tty${SSH_TTY##*/}"
-if [ "${SSH_TERM}" == "tty" ]; then
-  export SSH_TERM="notty"
+set -o pipefail
+
+function debug() {
+  if [ "${DEBUG}" == "true" ]; then
+    echo "DEBUG: $*" >&2
+  fi
+}
+
+if [ -n "${SSH_CLIENT}" ]; then
+  # Invoked as an SSH ForceCommand
+  export SSH_USER="${USER}"
+  export SSH_CLIENT_IP="$(echo "$SSH_CONNECTION" | cut -d' ' -f1)"
+  export SSH_TERM="tty${SSH_TTY##*/}"
+  if [ "${SSH_TERM}" == "tty" ]; then
+    export SSH_TERM="notty"
+  fi
+  export SSH_ORIGINAL_COMMAND="${SSH_ORIGINAL_COMMAND:-shell}"
+  export SLACK_NOTIFICATION_TEMPLATE="${SLACK_NOTIFICATION_TEMPLATE:-/etc/slack/ssh-force-command-notification.json}"
+elif [ "${PAM_TYPE}" == "open_session" ]; then
+  # Invoked as a PAM module
+  export SLACK_NOTIFICATION_TEMPLATE="${SLACK_NOTIFICATION_TEMPLATE:-/etc/slack/pam-${PAM_TYPE}-notification.json}"
+else
+  echo "Unknown invocation" >&2
+  exit 1
 fi
+
 export SLACK_USERNAME="${SLACK_USERNAME:-ssh-bot}"
 export SLACK_TIMEOUT="${SLACK_TIMEOUT:-2}"
 export SLACK_FATAL_ERRORS="${SLACK_FATAL_ERRORS:-true}"
 export HOSTNAME=`cat /etc/hostname`
 
-if [ "$PAM_TYPE" != "close_session" ]; then  
-  if [ -z "${SLACK_WEBHOOK_URL}" ]; then
-    echo "SLACK_WEBHOOK_URL not defined"
-    exit 1
-  fi
+if [ -z "${SLACK_WEBHOOK_URL}" ]; then
+  echo "SLACK_WEBHOOK_URL not defined"
+  exit 1
+fi
 
 # See: https://api.slack.com/docs/messages/builder
-cat<<__EOF__ | curl --fail --silent --connect-timeout ${SLACK_TIMEOUT} -H 'Content-type: application/json' --data @- "${SLACK_WEBHOOK_URL}" >/dev/null
-{ "mrkdwn": true, 
-  "username": "${SLACK_USERNAME}", 
-  "attachments": [ 
-    { "mrkdwn_in": ["text", "pretext", "fallback", "title"], 
-      "title": "SSH login on ${HOSTNAME}", 
-      "text": "\`\`\`${SSH_ORIGINAL_COMMAND:-shell}\`\`\`", 
-      "fields": [ 
-        { "title": "User", 
-          "value": "${SSH_USER}@${SSH_TERM}", 
-          "short": true 
-        }, 
-        { "title": "IP Address", 
-          "value": "${SSH_CLIENT_IP}", 
-          "short": true 
-        } 
-      ], 
-      "color": "#F35A00" 
-    } 
-  ],
-  "icon_emoji": ":computer:"
-}
-__EOF__
+if [ -f "${SLACK_NOTIFICATION_TEMPLATE}" ]; then
+  envsubst < "${SLACK_NOTIFICATION_TEMPLATE}" | \
+    curl --fail --silent --connect-timeout ${SLACK_TIMEOUT} -H 'Content-type: application/json' --data @- "${SLACK_WEBHOOK_URL}" >/dev/null
 
   exit=$?
 
   if [ $exit -eq 0 ]; then
-    echo "Slack notification sent" >&2
+    debug "Slack notification sent"
     exit $exit
   elif [ "${SLACK_FATAL_ERRORS}" == "true" ]; then
-    echo "Slack notification failed" >&2
+    debug "Slack notification failed"
     exit $exit
   fi  
-
 fi
-

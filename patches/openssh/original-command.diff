@@ -1,0 +1,18 @@
+diff --git a/session.c b/session.c
+index a08aa69..becf696 100644
+--- a/session.c
++++ b/session.c
+@@ -620,12 +620,11 @@ do_exec(Session *s, const char *command)
+ 	const char *forced = NULL, *tty = NULL;
+ 	char session_type[1024];
+ 
++	original_command = command;
+ 	if (options.adm_forced_command) {
+-		original_command = command;
+ 		command = options.adm_forced_command;
+ 		forced = "(config)";
+ 	} else if (forced_command) {
+-		original_command = command;
+ 		command = forced_command;
+ 		forced = "(key-option)";
+ 	}

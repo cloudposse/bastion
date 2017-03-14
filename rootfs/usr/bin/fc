@@ -1,4 +1,7 @@
 #!/bin/bash
+# 
+# SSH Force Command (fc) Wrapper
+#
 
 function _sigint() {
   echo -e '\nAborted'
@@ -7,9 +10,9 @@ function _sigint() {
 
 trap _sigint SIGINT
 
-for script in /etc/enforce.d/* ; do
+for script in /etc/fc.d/* ; do
   if [ -r $script ] && [ -x $script ]; then
-    $script
+    . $script
     if [ $? -ne 0 ]; then
       echo "Access denied"
       exit 1

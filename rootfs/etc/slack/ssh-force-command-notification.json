@@ -1,0 +1,22 @@
+{ "mrkdwn": true, 
+  "username": "${SLACK_USERNAME}", 
+  "attachments": [ 
+    { "mrkdwn_in": ["text", "pretext", "fallback", "title"], 
+      "title": "SSH login on ${HOSTNAME}", 
+      "text": "```${SSH_ORIGINAL_COMMAND}```", 
+      "fallback": "login by ${SSH_USER}@${HOSTNAME} from ${SSH_CLIENT_IP}",
+      "fields": [ 
+        { "title": "User", 
+          "value": "${SSH_USER}@${SSH_TERM}", 
+          "short": true 
+        }, 
+        { "title": "IP Address", 
+          "value": "${SSH_CLIENT_IP}", 
+          "short": true 
+        } 
+      ], 
+      "color": "#F35A00" 
+    } 
+  ],
+  "icon_emoji": ":computer:"
+}

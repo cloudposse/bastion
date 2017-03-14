@@ -1,0 +1,21 @@
+{ "mrkdwn": true, 
+  "username": "${SLACK_USERNAME}", 
+  "attachments": [ 
+    { "mrkdwn_in": ["pretext", "fallback", "title"], 
+      "title": "SSH login on ${HOSTNAME}", 
+      "fallback": "login by ${PAM_USER}@${HOSTNAME} from ${PAM_RHOST}",
+      "fields": [ 
+        { "title": "User", 
+          "value": "${PAM_USER}@${PAM_TTY}", 
+          "short": true 
+        }, 
+        { "title": "IP Address", 
+          "value": "${PAM_RHOST}", 
+          "short": true 
+        } 
+      ], 
+      "color": "#F35A00" 
+    } 
+  ],
+  "icon_emoji": ":computer:"
+}
