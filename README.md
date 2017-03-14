@@ -13,40 +13,24 @@ It was designed to be used on Kubernetes together with [GitHub Authorized Keys](
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/cloudposse/bastion/pulls)
 [![License](https://img.shields.io/badge/license-APACHE%202.0%20-brightgreen.svg)](https://github.com/cloudposse/bastion/blob/master/LICENSE)
 
+## Demo
+
+### MFA Setup & Usage
+
+Here's a demo of what a user experiences when setting up Google Authenticator for the first time.
 
 ![Demo 1](docs/demo.gif)
+
+Using Duo, this is even more magical because it supports automatic Push notifications. 
+
+### Slack Notifications
+
+Here's what it looks like when someone connects to the bastion if Slack notifications are enabled. 
+
 ![Demo 2](docs/slack.png)
 
-
-## Table of Contents
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-- [Help](#help)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-  - [Running](#running)
-  - [Building](#building)
-  - [Configuration](#configuration)
-- [Recommendations](#recommendations)
-    - [Environment Variables](#environment-variables)
-      - [Duo Settings](#duo-settings)
-      - [Google Authenticator Settings](#google-authenticator-settings)
-      - [Enforcer Settings](#enforcer-settings)
-      - [SSH Auditor](#ssh-auditor)
-    - [User Accounts & SSH Keys](#user-accounts-&-ssh-keys)
-  - [Extending](#extending)
-- [Contributing](#contributing)
-    - [Bug Reports & Feature Requests](#bug-reports-&-feature-requests)
-    - [Developing](#developing)
-- [Change Log](#change-log)
-- [Thanks](#thanks)
-- [License](#license)
-- [About](#about)
-  - [Contributors](#contributors)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+We recommend using Slack notifications for self-reporting. Any time a user accesses production systems, they should
+reply to the `ssh-bot` to justify their remote access.
 
 ## Help
 
