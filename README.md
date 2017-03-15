@@ -22,7 +22,7 @@ Here's a demo of what a user experiences when setting up Google Authenticator fo
 ![Demo 1](docs/demo.gif)
 
 When using Duo as the MFA provider, this becomes even more magical because Duo supports automatic Push notifications to your mobile device.
-Just aprove the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
+Just approve the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
 
 ### Slack Notifications
 
