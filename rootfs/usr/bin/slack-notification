@@ -30,10 +30,15 @@ else
   exit 1
 fi
 
-export SLACK_USERNAME="${SLACK_USERNAME:-ssh-bot}"
+if [ -s "/etc/hostname" ]; then
+  export HOSTNAME=`cat /etc/hostname`
+else
+  export HOSTNAME=`hostname`
+fi
+export SHORT_HOSTNAME="${HOSTNAME%%.*}"
+export SLACK_USERNAME="${SLACK_USERNAME:-${SHORT_HOSTNAME}}"
 export SLACK_TIMEOUT="${SLACK_TIMEOUT:-2}"
 export SLACK_FATAL_ERRORS="${SLACK_FATAL_ERRORS:-true}"
-export HOSTNAME=`cat /etc/hostname`
 
 if [ -z "${SLACK_WEBHOOK_URL}" ]; then
   echo "SLACK_WEBHOOK_URL not defined"

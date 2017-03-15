@@ -31,7 +31,7 @@ Here's what it looks like when someone connects to the bastion if Slack notifica
 ![Demo 2](docs/slack.png)
 
 We recommend using Slack notifications for self-reporting. Any time a user accesses production systems, they should
-reply to the `ssh-bot` to justify their remote access.
+reply to the slack notification to justify their remote access.
 
 ## Help
 
@@ -138,7 +138,7 @@ The enforcer is able to send notifications to a slack channel anytime there is a
 |----------------------------|:----------------------------------------------------|:---------:|
 | `SLACK_HOOK`               | Slack integration method (e.g. `pam`, `sshrc`)      | `sshrc`   |
 | `SLACK_WEBHOOK_URL`        | Webhook URL                                         |           |
-| `SLACK_USERNAME`           | Slack handle of bot                                 | `ssh-bot` |
+| `SLACK_USERNAME`           | Slack handle of bot (defaults to short-dns name)    |           |
 | `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
 | `SLACK_FATAL_ERRORS`       | Deny logins if slack notificaiton fails             | `true`    |
 
