@@ -2,6 +2,7 @@ if [ "${SLACK_ENABLED}" == "true" ]; then
   echo "- Enabling Slack Notifications"
   env | grep "^SLACK_" > /etc/slack/env
   if [ "${SLACK_HOOK}" == "sshrc" ]; then
+    mkdir -p /etc/ssh/sshrc.d/
     ln -sf /usr/bin/slack-notification /etc/ssh/sshrc.d/slack-notification
     chmod 644 /etc/slack/env
   elif [ "${SLACK_HOOK}" == "pam" ]; then
