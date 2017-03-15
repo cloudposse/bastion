@@ -32,7 +32,7 @@ Here's what it looks like when someone connects to the bastion if Slack notifica
 
 We recommend using Slack notifications for self-reporting. 
 * Any time a user accesses production systems, they should reply to the slack notification to justify their remote access. 
-* A "buddy" should approve the login by adding a reaction (e.g. "✅"). 
+* A "buddy" should approve the login by adding a reaction (e.g. ✅). 
 * If no one approves the login, it should trigger an *incident response* to track down the unauthorized access.
 
 ## Help
