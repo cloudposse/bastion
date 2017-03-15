@@ -22,7 +22,7 @@ Here's a demo of what a user experiences when setting up Google Authenticator fo
 ![Demo 1](docs/demo.gif)
 
 When using Duo as the MFA provider, this becomes even more magical because Duo supports automatic Push notifications to your mobile device.
-Just aprove the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
+Just approve the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
 
 ### Slack Notifications
 
@@ -30,8 +30,10 @@ Here's what it looks like when someone connects to the bastion if Slack notifica
 
 ![Demo 2](docs/slack.png)
 
-We recommend using Slack notifications for self-reporting. Any time a user accesses production systems, they should
-reply to the `ssh-bot` to justify their remote access.
+We recommend using Slack notifications for self-reporting. 
+* Any time a user accesses production systems, they should reply to the slack notification to justify their remote access. 
+* A "buddy" should approve the login by adding a reaction (e.g. ✅). 
+* If no one approves the login, it should trigger an *incident response* to track down the unauthorized access.
 
 ## Help
 
@@ -138,7 +140,7 @@ The enforcer is able to send notifications to a slack channel anytime there is a
 |----------------------------|:----------------------------------------------------|:---------:|
 | `SLACK_HOOK`               | Slack integration method (e.g. `pam`, `sshrc`)      | `sshrc`   |
 | `SLACK_WEBHOOK_URL`        | Webhook URL                                         |           |
-| `SLACK_USERNAME`           | Slack handle of bot                                 | `ssh-bot` |
+| `SLACK_USERNAME`           | Slack handle of bot (defaults to short-dns name)    |           |
 | `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
 | `SLACK_FATAL_ERRORS`       | Deny logins if slack notificaiton fails             | `true`    |
 
