@@ -59,7 +59,7 @@ TCPKeepAlive yes
 UsePrivilegeSeparation sandbox
 PermitUserEnvironment no
 #Compression delayed
-ClientAliveInterval 0
+ClientAliveInterval 30
 ClientAliveCountMax 3
 UseDNS no
 #PidFile /run/sshd.pid
