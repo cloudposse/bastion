@@ -138,6 +138,7 @@ The enforcer is able to send notifications to a slack channel anytime there is a
 
 | ENV                        |      Description                                    |  Default  |
 |----------------------------|:----------------------------------------------------|:---------:|
+| `SLACK_ENABLED`            | Enabled Slack integration                           | `false`   |
 | `SLACK_HOOK`               | Slack integration method (e.g. `pam`, `sshrc`)      | `sshrc`   |
 | `SLACK_WEBHOOK_URL`        | Webhook URL                                         |           |
 | `SLACK_USERNAME`           | Slack handle of bot (defaults to short-dns name)    |           |
