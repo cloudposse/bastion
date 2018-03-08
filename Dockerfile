@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.7
 MAINTAINER Erik Osterman "erik@cloudposse.com"
 
 USER root
