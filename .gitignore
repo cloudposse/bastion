@@ -1,2 +1,5 @@
 build-harness/
 Makefile.build-harness
+
+.idea
+*.iml
