@@ -28,31 +28,6 @@ We recommend using Slack notifications for self-reporting.
 * A "buddy" should approve the login by adding a reaction (e.g. ✅).
 * If no one approves the login, it should trigger an *incident response* to track down the unauthorized access.
 
-## Help
-
-**Got a question?**
-File a GitHub [issue](https://github.com/cloudposse/bastion/issues), send us an [email](http://cloudposse.com/contact/) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
-
-
-## Quick Start
-
-Here's how you can quickly demo the `bastion`. We assume you have `~/.ssh/authorized_keys` properly configured and your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
-
-
-```bash
-$ docker run -it -p 1234:22 \
-     -e MFA_PROVIDER=google-authenticator \
-     -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys
-     cloudposse/bastion
-```
-
-Now, in another terminal you should be able to run:
-```bash
-$ ssh root@localhost -p 1234
-```
-
-The first time you connect, you'll be asked to setup your MFA device. Subsequently, each time you connect, you'll be prompted to enter your MFA token.
-
 
 ---
 
@@ -174,7 +149,25 @@ The `bastion` was written to be easily extensible.
 
 You can extend the enforcement policies by adding shell scripts to `etc/enforce.d`. Any scripts that are `+x` (e.g. `chmod 755`) will be executed at runtime.
 
+## Quick Start
 
+
+Here's how you can quickly demo the `bastion`. We assume you have `~/.ssh/authorized_keys` properly configured and your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
+
+
+```bash
+$ docker run -it -p 1234:22 \
+     -e MFA_PROVIDER=google-authenticator \
+     -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys
+     cloudposse/bastion
+```
+
+Now, in another terminal you should be able to run:
+```bash
+$ ssh root@localhost -p 1234
+```
+
+The first time you connect, you'll be asked to setup your MFA device. Subsequently, each time you connect, you'll be prompted to enter your MFA token.
 
 
 
@@ -286,8 +279,8 @@ Check out [our other projects][github], [apply for a job][jobs], or [hire us][hi
 |---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=144
+  [osterman_avatar]: http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=150
   [marji_homepage]: https://github.com/marji
-  [marji_avatar]: https://avatars2.githubusercontent.com/u/1254919?s=460&v=4
+  [marji_avatar]: https://avatars2.githubusercontent.com/u/1254919?s=150&v=4
 
 
