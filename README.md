@@ -279,8 +279,8 @@ Check out [our other projects][github], [apply for a job][jobs], or [hire us][hi
 |---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=150
+  [osterman_avatar]: https://github.com/osterman.png?size=150
   [marji_homepage]: https://github.com/marji
-  [marji_avatar]: https://avatars2.githubusercontent.com/u/1254919?s=150&v=4
+  [marji_avatar]: https://github.com/marji.png?size=150
 
 

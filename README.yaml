@@ -185,10 +185,6 @@ usage: |-
 # Contributors to this project
 contributors:
   - name: "Erik Osterman"
-    homepage: "https://github.com/osterman"
-    avatar: "http://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=150"
     github: "osterman"
   - name: "Marji Cermak"
-    homepage: "https://github.com/marji"
-    avatar: "https://avatars2.githubusercontent.com/u/1254919?s=150&v=4"
     github: "marji"
