@@ -2,7 +2,7 @@
 
 [![Cloud Posse](https://cloudposse.com/logo-300x69.png)](https://cloudposse.com)
 
-# bastion  [![Build Status](https://travis-ci.org/cloudposse/bastion.svg?branch=master)](https://travis-ci.org/cloudposse/bastion-cloudtrail) [![Latest Release](https://img.shields.io/github/release/cloudposse/bastion.svg)](https://travis-ci.org/cloudposse/bastion-cloudtrail/releases) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# bastion [![Build Status](https://travis-ci.org/cloudposse/bastion.svg?branch=master)](https://travis-ci.org/cloudposse/bastion-cloudtrail) [![Latest Release](https://img.shields.io/github/release/cloudposse/bastion.svg)](https://travis-ci.org/cloudposse/bastion-cloudtrail/releases) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 This is a secure/locked-down bastion implemented as a Docker Container. It uses Alpine Linux as the base image and ships with support for Google Authenticator & DUO MFA support.
@@ -149,6 +149,13 @@ The `bastion` was written to be easily extensible.
 
 You can extend the enforcement policies by adding shell scripts to `etc/enforce.d`. Any scripts that are `+x` (e.g. `chmod 755`) will be executed at runtime.
 
+## Thanks
+
+- [@neochrome](https://github.com/neochrome/docker-bastion), for providing a great basic bastion built on top of Alpine Linux
+- [@aws](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/), for providing detailed instructions on how to do SSH session logging.
+- [@duo](https://duo.com/docs/duounix), for providing excellent documentation
+- [@google](https://github.com/google/google-authenticator-libpam) for contributing Google Authenticator to the Open Source community
+
 ## Quick Start
 
 
@@ -185,6 +192,8 @@ Work directly with our team of DevOps experts via email, slack, and video confer
 
 We provide *commercial support* for all of our [Open Source][github] projects. As a *Dedicated Support* customer, you have access to our team of subject matter experts at a fraction of the cost of a fulltime engineer. 
 
+[![E-Mail](https://img.shields.io/badge/email-hello@cloudposse.com-blue.svg)](mailto:hello@cloudposse.com)
+
 - **Questions.** We'll use a Shared Slack channel between your team and ours.
 - **Troubleshooting.** We'll help you triage why things aren't working.
 - **Code Reviews.** We'll review your Pull Requests and provide constructive feedback.
@@ -192,6 +201,7 @@ We provide *commercial support* for all of our [Open Source][github] projects. A
 - **Build New Terraform Modules.** We'll develop original modules to provision infrastructure.
 - **Cloud Architecture.** We'll assist with your cloud strategy and design.
 - **Implementation.** We'll provide hands on support to implement our reference architectures. 
+
 
 ## Community Forum
 

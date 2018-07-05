@@ -182,6 +182,13 @@ usage: |-
 
   You can extend the enforcement policies by adding shell scripts to `etc/enforce.d`. Any scripts that are `+x` (e.g. `chmod 755`) will be executed at runtime.
 
+  ## Thanks
+
+  - [@neochrome](https://github.com/neochrome/docker-bastion), for providing a great basic bastion built on top of Alpine Linux
+  - [@aws](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/), for providing detailed instructions on how to do SSH session logging.
+  - [@duo](https://duo.com/docs/duounix), for providing excellent documentation
+  - [@google](https://github.com/google/google-authenticator-libpam) for contributing Google Authenticator to the Open Source community
+  
 # Contributors to this project
 contributors:
   - name: "Erik Osterman"
