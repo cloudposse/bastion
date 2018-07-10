@@ -20,10 +20,10 @@ github_repo: cloudposse/bastion
 badges:
   - name: "Build Status"
     image: "https://travis-ci.org/cloudposse/bastion.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/bastion-cloudtrail"
+    url: "https://travis-ci.org/cloudposse/bastion"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/bastion.svg"
-    url: "https://travis-ci.org/cloudposse/bastion-cloudtrail/releases"
+    url: "https://github.com/cloudposse/bastion/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
