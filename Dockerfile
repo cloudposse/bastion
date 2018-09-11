@@ -3,7 +3,7 @@ MAINTAINER Erik Osterman "erik@cloudposse.com"
 
 USER root
 
-ARG OPENSSH_VERSION=V_7_4_P1
+ARG OPENSSH_VERSION=V_7_8_P1
 
 RUN apk --update add linux-pam libssl1.0 shadow ca-certificates openssl && \
     update-ca-certificates && \
