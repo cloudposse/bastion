@@ -35,7 +35,7 @@ RUN apk --update add --virtual .build-deps build-base automake autoconf libtool 
     ( git clone https://github.com/openssh/openssh-portable.git /usr/src/openssh && \
       cd /usr/src/openssh && \
       git checkout ${OPENSSH_VERSION} && \
-      find ../patches/openssh -type f -exec patch -p1 -i {} \; && \
+      find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
       autoreconf && \
       ./configure \
           --prefix=/usr \
