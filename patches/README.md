@@ -10,7 +10,7 @@ One patch ensures we have `SSH_ORIGINAL_COMMAND` available during pam auth so we
 [original-command.diff](openssh/cloudposse/original-command.diff)
 
 The other patch obscures the version of OpenSSH. We use this to hide the SSH version so it's not announced to port-scanners.  
-[obfuscate-versio.diff](openssh/cloudposse/obfuscate-version.diff)
+[obfuscate-version.diff](openssh/cloudposse/obfuscate-version.diff)
 
 Also we modified one alpine patch related to realpath, because it is outdated.  
 [bsd-compatible-realpath.diff](openssh/cloudposse/bsd-compatible-realpath.diff)
