@@ -3,7 +3,7 @@ MAINTAINER Erik Osterman "erik@cloudposse.com"
 
 USER root
 
-ARG OPENSSH_VERSION=V_7_4_P1
+ARG OPENSSH_VERSION=V_7_8_P1
 
 RUN apk --update add linux-pam libssl1.0 shadow ca-certificates openssl && \
     update-ca-certificates && \
@@ -35,7 +35,7 @@ RUN apk --update add --virtual .build-deps build-base automake autoconf libtool 
     ( git clone https://github.com/openssh/openssh-portable.git /usr/src/openssh && \
       cd /usr/src/openssh && \
       git checkout ${OPENSSH_VERSION} && \
-      find ../patches/openssh -type f -exec patch -p1 -i {} \; && \
+      find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
       autoreconf && \
       ./configure \
           --prefix=/usr \
