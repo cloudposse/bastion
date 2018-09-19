@@ -1,124 +1,260 @@
-FROM alpine:3.8
-MAINTAINER Erik Osterman "erik@cloudposse.com"
+#
+# Base builder image
+#
+FROM alpine:3.8 as builder
 
-USER root
+RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget
+
+
+#
+# Duo builder image
+#
+FROM builder as duo-builder
+
+ARG DUO_VERSION=1.10.5
+RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
+    tar -zxf duo_unix-${DUO_VERSION}.tar.gz
+
+RUN cd duo_unix-${DUO_VERSION} && \
+    ./configure --with-pam --prefix=/usr && \
+    make
+    # make install
+    ## TODO install it to bastion image
+
+
+#
+# Google Authenticator PAM module builder image
+#
+FROM builder as google-authenticator-libpam-builder
+
+ARG AUTHENTICATOR_LIBPAM_VERSION=1.05
+RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam
+
+RUN cd google-authenticator-libpam && \
+    ./bootstrap.sh && \
+    ./configure --prefix=/ && \
+    make
+    # make install
+    ## TODO install it to bastion image
+
+
+#
+# OpenSSH Portable builder image
+#
+FROM builder as openssh-portable-builder
 
 ARG OPENSSH_VERSION=V_7_8_P1
+RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable
 
-RUN apk --update add linux-pam libssl1.0 shadow ca-certificates openssl && \
-    update-ca-certificates && \
-    ln -s /lib /lib64
+COPY patches/ /patches/
 
-ADD patches/ /usr/src/patches/
+RUN cd openssh-portable && \
+    git checkout ${OPENSSH_VERSION} && \
+    find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
+    autoreconf && \
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc/ssh \
+        --datadir=/usr/share/openssh \
+        --libexecdir=/usr/lib/ssh \
+        --mandir=/usr/share/man \
+        --with-pid-dir=/run \
+        --with-mantype=man \
+        --with-privsep-path=/var/empty \
+        --with-privsep-user=sshd \
+        --with-md5-passwords \
+        --with-ssl-engine \
+        --disable-wtmp \
+        --with-pam && \
+    make
+    # make install
+    ## TODO install it to bastion image
 
-# Building OpenSSH on alpine: http://git.alpinelinux.org/cgit/aports/tree/main/openssh/APKBUILD 
+#
+# Bastion image
+#
+FROM alpine:3.8
 
-RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget && \
-    mkdir -p /usr/src && \
-    cd /usr/src && \
-    ( wget https://dl.duosecurity.com/duo_unix-latest.tar.gz && \
-      tar zxf duo_unix-latest.tar.gz && \
-      cd duo_unix-* && \
-      ./configure --with-pam --prefix=/usr && \
-      make && \
-      make install && \ 
-      cd .. && \
-      rm -rf duo_unix-* && \
-      rm -f duo_unix-latest.tar.gz \
-    ) && \
-    ( git clone https://github.com/google/google-authenticator-libpam /usr/src/google-authenticator-libpam && \
-      cd /usr/src/google-authenticator-libpam && \
-      ./bootstrap.sh && \
-      ./configure --prefix=/ && \
-      make && \
-      make install) && \
-    ( git clone https://github.com/openssh/openssh-portable.git /usr/src/openssh && \
-      cd /usr/src/openssh && \
-      git checkout ${OPENSSH_VERSION} && \
-      find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
-      autoreconf && \
-      ./configure \
-          --prefix=/usr \
-          --sysconfdir=/etc/ssh \
-          --datadir=/usr/share/openssh \
-          --libexecdir=/usr/lib/ssh \
-          --mandir=/usr/share/man \
-          --with-pid-dir=/run \
-          --with-mantype=man \
-          --with-privsep-path=/var/empty \
-          --with-privsep-user=sshd \
-          --with-md5-passwords \
-          --with-ssl-engine \
-          --disable-wtmp \
-          --with-pam && \
-      make && \
-      make install) && \
-    rm -rf /usr/src && \
-    apk del .build-deps && \
-    rm -rf /var/cache/apk/*
+LABEL maintainer="erik@cloudposse.com"
 
-RUN apk --update add curl drill groff util-linux bash xauth gettext sudo && \
-  rm -rf /etc/ssh/ssh_host_*_key* && \
-  rm -f /usr/bin/ssh-agent && \
-  rm -f /usr/bin/ssh-keyscan && \
-  touch /var/log/lastlog && \
-  mkdir -p /var/run/sshd && \
-  mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
+USER root
 
 ENV SUDOSH_VERSION=0.1.3
 ADD https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 /usr/bin/sudosh
 RUN chmod 755 /usr/bin/sudosh
 
-# System ENV
-ENV TIMEZONE=Etc/UTC
-ENV TERM=xterm
-ENV HOSTNAME=bastion
+# System
+ENV TIMEZONE="Etc/UTC" \
+    TERM="xterm" \
+    HOSTNAME="bastion"
 
-ENV MFA_PROVIDER=duo
+ENV MFA_PROVIDER="duo"
 
-ENV UMASK=0022
+ENV UMASK="0022"
 
-ENV DUO_IKEY=
-ENV DUO_SKEY=
-ENV DUO_HOST=
-ENV DUO_FAILMODE=secure
-ENV DUO_AUTOPUSH=yes
-ENV DUO_PROMPTS=1
+# Duo
+ENV DUO_IKEY="" \
+    DUO_SKEY="" \
+    DUO_HOST="" \
+    DUO_FAILMODE="secure" \
+    DUO_AUTOPUSH="yes" \
+    DUO_PROMPTS="1"
 
-ENV ENFORCER_ENABLED=true
-ENV ENFORCER_CLEAN_HOME_ENABLED=true
+# Enforcer
+ENV ENFORCER_ENABLED="true" \
+    ENFORCER_CLEAN_HOME_ENABLED="true"
 
-ENV SSH_AUDIT_ENABLED=true
 
 # Enable Rate Limiting
-ENV RATE_LIMIT_ENABLED=true
+ENV RATE_LIMIT_ENABLED="true"
 
 # Tolerate 5 consecutive fairues    
-ENV RATE_LIMIT_MAX_FAILURES=5
-
+ENV RATE_LIMIT_MAX_FAILURES="5"
 # Lock accounts out for 300 seconds (5 minutes) after repeated failures
-ENV RATE_LIMIT_LOCKOUT_TIME=300
+ENV RATE_LIMIT_LOCKOUT_TIME="300"
 # Sleep N microseconds between failed attempts
-ENV RATE_LIMIT_FAIL_DELAY=3000000
+ENV RATE_LIMIT_FAIL_DELAY="3000000"
 
-#
 # Slack
-#
-ENV SLACK_ENABLED=false
-ENV SLACK_HOOK=sshrc
-ENV SLACK_WEBHOOK_URL=
-ENV SLACK_USERNAME=
-ENV SLACK_TIMEOUT=2
-ENV SLACK_FATAL_ERRORS=true
+ENV SLACK_ENABLED="false" \
+    SLACK_HOOK="sshrc" \
+    SLACK_WEBHOOK_URL="" \
+    SLACK_USERNAME="" \
+    SLACK_TIMEOUT="2" \
+    SLACK_FATAL_ERRORS="true"
 
-#
 # SSH
-#
-ENV SSH_AUTHORIZED_KEYS_COMMAND=none
-ENV SSH_AUTHORIZED_KEYS_COMMAND_USER=nobody
+ENV SSH_AUDIT_ENABLED="true" \
+    SSH_AUTHORIZED_KEYS_COMMAND="none" \
+    SSH_AUTHORIZED_KEYS_COMMAND_USER="nobody"
 
 ADD rootfs/ /
 
 EXPOSE 22
-
 ENTRYPOINT ["/init"]
+
+
+# FROM alpine:3.8
+# MAINTAINER Erik Osterman "erik@cloudposse.com"
+
+# USER root
+
+# ARG OPENSSH_VERSION=V_7_8_P1
+
+# RUN apk --update add linux-pam libssl1.0 shadow ca-certificates openssl && \
+#     update-ca-certificates && \
+#     ln -s /lib /lib64
+
+# ADD patches/ /usr/src/patches/
+
+# # Building OpenSSH on alpine: http://git.alpinelinux.org/cgit/aports/tree/main/openssh/APKBUILD 
+
+# RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget && \
+#     mkdir -p /usr/src && \
+#     cd /usr/src && \
+#     ( wget https://dl.duosecurity.com/duo_unix-latest.tar.gz && \
+#       tar zxf duo_unix-latest.tar.gz && \
+#       cd duo_unix-* && \
+#       ./configure --with-pam --prefix=/usr && \
+#       make && \
+#       make install && \ 
+#       cd .. && \
+#       rm -rf duo_unix-* && \
+#       rm -f duo_unix-latest.tar.gz \
+#     ) && \
+#     ( git clone https://github.com/google/google-authenticator-libpam /usr/src/google-authenticator-libpam && \
+#       cd /usr/src/google-authenticator-libpam && \
+#       ./bootstrap.sh && \
+#       ./configure --prefix=/ && \
+#       make && \
+#       make install) && \
+#     ( git clone https://github.com/openssh/openssh-portable.git /usr/src/openssh && \
+#       cd /usr/src/openssh && \
+#       git checkout ${OPENSSH_VERSION} && \
+#       find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
+#       autoreconf && \
+#       ./configure \
+#           --prefix=/usr \
+#           --sysconfdir=/etc/ssh \
+#           --datadir=/usr/share/openssh \
+#           --libexecdir=/usr/lib/ssh \
+#           --mandir=/usr/share/man \
+#           --with-pid-dir=/run \
+#           --with-mantype=man \
+#           --with-privsep-path=/var/empty \
+#           --with-privsep-user=sshd \
+#           --with-md5-passwords \
+#           --with-ssl-engine \
+#           --disable-wtmp \
+#           --with-pam && \
+#       make && \
+#       make install) && \
+#     rm -rf /usr/src && \
+#     apk del .build-deps && \
+#     rm -rf /var/cache/apk/*
+
+# RUN apk --update add curl drill groff util-linux bash xauth gettext sudo && \
+#   rm -rf /etc/ssh/ssh_host_*_key* && \
+#   rm -f /usr/bin/ssh-agent && \
+#   rm -f /usr/bin/ssh-keyscan && \
+#   touch /var/log/lastlog && \
+#   mkdir -p /var/run/sshd && \
+#   mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
+
+# ENV SUDOSH_VERSION=0.1.3
+# ADD https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 /usr/bin/sudosh
+# RUN chmod 755 /usr/bin/sudosh
+
+# # System ENV
+# ENV TIMEZONE=Etc/UTC
+# ENV TERM=xterm
+# ENV HOSTNAME=bastion
+
+# ENV MFA_PROVIDER=duo
+
+# ENV UMASK=0022
+
+# ENV DUO_IKEY=
+# ENV DUO_SKEY=
+# ENV DUO_HOST=
+# ENV DUO_FAILMODE=secure
+# ENV DUO_AUTOPUSH=yes
+# ENV DUO_PROMPTS=1
+
+# ENV ENFORCER_ENABLED=true
+# ENV ENFORCER_CLEAN_HOME_ENABLED=true
+
+# ENV SSH_AUDIT_ENABLED=true
+
+# # Enable Rate Limiting
+# ENV RATE_LIMIT_ENABLED=true
+
+# # Tolerate 5 consecutive fairues    
+# ENV RATE_LIMIT_MAX_FAILURES=5
+
+# # Lock accounts out for 300 seconds (5 minutes) after repeated failures
+# ENV RATE_LIMIT_LOCKOUT_TIME=300
+# # Sleep N microseconds between failed attempts
+# ENV RATE_LIMIT_FAIL_DELAY=3000000
+
+# #
+# # Slack
+# #
+# ENV SLACK_ENABLED=false
+# ENV SLACK_HOOK=sshrc
+# ENV SLACK_WEBHOOK_URL=
+# ENV SLACK_USERNAME=
+# ENV SLACK_TIMEOUT=2
+# ENV SLACK_FATAL_ERRORS=true
+
+# #
+# # SSH
+# #
+# ENV SSH_AUTHORIZED_KEYS_COMMAND=none
+# ENV SSH_AUTHORIZED_KEYS_COMMAND_USER=nobody
+
+# ADD rootfs/ /
+
+# EXPOSE 22
+
+# ENTRYPOINT ["/init"]
