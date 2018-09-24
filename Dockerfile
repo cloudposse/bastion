@@ -13,10 +13,10 @@ FROM builder as duo-builder
 
 ARG DUO_VERSION=1.10.5
 RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
-    mkdir -p duo_unix && \
-    tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C duo_unix
+    mkdir -p dist && \
+    tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C dist
 
-RUN cd duo_unix && \
+RUN cd dist && \
     ./configure --with-pam --prefix=/usr && \
     make
 
@@ -27,9 +27,9 @@ RUN cd duo_unix && \
 FROM builder as google-authenticator-libpam-builder
 
 ARG AUTHENTICATOR_LIBPAM_VERSION=1.05
-RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam
+RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam dist
 
-RUN cd google-authenticator-libpam && \
+RUN cd dist && \
     ./bootstrap.sh && \
     ./configure --prefix=/ && \
     make
@@ -41,12 +41,11 @@ RUN cd google-authenticator-libpam && \
 FROM builder as openssh-portable-builder
 
 ARG OPENSSH_VERSION=V_7_8_P1
-RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable
+RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable dist
 
 COPY patches/ /patches/
 
-RUN cd openssh-portable && \
-    git checkout ${OPENSSH_VERSION} && \
+RUN cd dist && \
     find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
     autoreconf && \
     ./configure \
@@ -77,23 +76,23 @@ USER root
 
 ## Install sudosh
 ENV SUDOSH_VERSION=0.1.3
-ADD https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 /usr/bin/sudosh
-RUN chmod 755 /usr/bin/sudosh
+RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 -O /usr/bin/sudosh && \
+    chmod 755 /usr/bin/sudosh
 
 ## Install Duo
-COPY --from=duo-builder duo_unix duo_unix
-RUN (cd duo_unix && make install) && \
-    rm -rf duo_unix
+COPY --from=duo-builder dist dist
+RUN make --directory=dist install && \
+    rm -rf dist
 
 ## Install Google Authenticator PAM module
-COPY --from=google-authenticator-libpam-builder google-authenticator-libpam google-authenticator-libpam
-RUN (cd google-authenticator-libpam && make install) && \
-    rm -rf google-authenticator-libpam
+COPY --from=google-authenticator-libpam-builder dist dist
+RUN make --directory=dist install && \
+    rm -rf dist
 
 ## Install OpenSSH Portable
-COPY --from=openssh-portable-builder openssh-portable openssh-portable
-RUN (cd openssh-portable && make install) && \
-    rm -rf openssh-portable
+COPY --from=openssh-portable-builder dist dist
+RUN make --directory=dist install && \
+    rm -rf dist
 
 ## System
 ENV TIMEZONE="Etc/UTC" \
