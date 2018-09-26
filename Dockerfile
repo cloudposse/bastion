@@ -3,7 +3,8 @@
 ##
 FROM alpine:3.8 as builder
 
-RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget
+ENV BUILD_DEPENDENCIES=".build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget"
+RUN apk --update add --virtual ${BUILD_DEPENDENCIES}
 
 
 ##
@@ -93,6 +94,9 @@ RUN make --directory=dist install && \
 COPY --from=openssh-portable-builder dist dist
 RUN make --directory=dist install && \
     rm -rf dist
+
+## Remove build dependencies
+RUN apk del ${BUILD_DEPENDENCIES}
 
 ## System
 ENV TIMEZONE="Etc/UTC" \
