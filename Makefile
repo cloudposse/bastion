@@ -9,7 +9,7 @@ include $(shell curl --silent -O "https://raw.githubusercontent.com/cloudposse/b
 reset:
 	ssh-keygen -R '[localhost]:1234' || true
 
-shell: 
+shell: reset
 	docker run --name bastion --rm -it -p1234:22 \
 		-v ~/.ssh/:/root/.ssh/ \
 		--env-file=../.secrets \
@@ -18,7 +18,7 @@ shell:
 		-e SLACK_ENABLED=true \
 		--entrypoint=/bin/bash $(DOCKER_IMAGE_NAME)
 
-run: 
+run: reset
 	docker run --name bastion --rm -it -p1234:22 \
 		-v ~/.ssh/:/root/.ssh/ \
 		--env-file=../.secrets \
