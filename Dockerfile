@@ -74,6 +74,8 @@ LABEL maintainer="erik@cloudposse.com"
 
 USER root
 
+RUN apk add shadow
+
 ## Install sudosh
 ENV SUDOSH_VERSION=0.1.3
 RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 -O /usr/bin/sudosh && \
