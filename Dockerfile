@@ -74,8 +74,14 @@ LABEL maintainer="erik@cloudposse.com"
 
 USER root
 
-RUN apk add shadow sudo curl && \
-    touch /var/log/lastlog
+## Install dependencies
+RUN apk --update add curl drill groff util-linux bash xauth gettext shadow sudo && \
+    rm -rf /etc/ssh/ssh_host_*_key* && \
+    rm -f /usr/bin/ssh-agent && \
+    rm -f /usr/bin/ssh-keyscan && \
+    touch /var/log/lastlog && \
+    mkdir -p /var/run/sshd && \
+    mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
 
 ## Install sudosh
 ENV SUDOSH_VERSION=0.1.3
