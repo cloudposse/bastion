@@ -74,7 +74,8 @@ LABEL maintainer="erik@cloudposse.com"
 
 USER root
 
-RUN apk add shadow sudo curl
+RUN apk add shadow sudo curl && \
+    touch /var/log/lastlog
 
 ## Install sudosh
 ENV SUDOSH_VERSION=0.1.3
