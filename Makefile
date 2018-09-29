@@ -6,12 +6,23 @@ COPYRIGHT_SOFTWARE_DESCRIPTION := A secure Bastion host implemented as Docker Co
 
 include $(shell curl --silent -O "https://raw.githubusercontent.com/cloudposse/build-harness/master/templates/Makefile.build-harness"; echo Makefile.build-harness)
 
-run: 
-	ssh-keygen -R '[localhost]:1234'
-	docker run -it -p1234:22 \
+reset:
+	ssh-keygen -R '[localhost]:1234' || true
+
+shell: 
+	docker run --name bastion --rm -it -p1234:22 \
 		-v ~/.ssh/:/root/.ssh/ \
 		--env-file=../.secrets \
 		--env-file=../.duo \
 		-e MFA_PROVIDER=google-authenticator \
 		-e SLACK_ENABLED=true \
 		--entrypoint=/bin/bash $(DOCKER_IMAGE_NAME)
+
+run: 
+	docker run --name bastion --rm -it -p1234:22 \
+		-v ~/.ssh/:/root/.ssh/ \
+		--env-file=../.secrets \
+		--env-file=../.duo \
+		-e MFA_PROVIDER=google-authenticator \
+		-e SLACK_ENABLED=true \
+			$(DOCKER_IMAGE_NAME)

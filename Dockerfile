@@ -74,7 +74,7 @@ LABEL maintainer="erik@cloudposse.com"
 
 USER root
 
-RUN apk add shadow
+RUN apk add shadow sudo curl
 
 ## Install sudosh
 ENV SUDOSH_VERSION=0.1.3
