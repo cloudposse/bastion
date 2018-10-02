@@ -3,8 +3,7 @@
 ##
 FROM alpine:3.8 as builder
 
-ENV BUILD_DEPENDENCIES=".build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget"
-RUN apk --update add --virtual ${BUILD_DEPENDENCIES}
+RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget
 
 
 ##
@@ -18,7 +17,9 @@ RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
     tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C dist
 
 RUN cd dist && \
-    ./configure --with-pam --prefix=/usr && \
+    ./configure \
+        --with-pam \
+        --prefix=/usr && \
     make
 
 
@@ -32,7 +33,8 @@ RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://g
 
 RUN cd dist && \
     ./bootstrap.sh && \
-    ./configure --prefix=/ && \
+    ./configure \
+        --prefix=/ && \
     make
 
 
@@ -103,9 +105,6 @@ RUN make --directory=dist install && \
 COPY --from=openssh-portable-builder dist dist
 RUN make --directory=dist install && \
     rm -rf dist
-
-## Remove build dependencies
-RUN apk del ${BUILD_DEPENDENCIES}
 
 ## System
 ENV TIMEZONE="Etc/UTC" \
