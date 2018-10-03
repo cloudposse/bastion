@@ -13,12 +13,15 @@ FROM builder as duo-builder
 
 ARG DUO_VERSION=1.10.5
 RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
-    mkdir -p dist && \
-    tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C dist
+    mkdir -p src && \
+    tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C src
 
-RUN cd dist && \
-    ./configure --with-pam --prefix=/usr && \
-    make
+RUN cd src && \
+    ./configure \
+        --with-pam \
+        --prefix=/dist/usr && \
+    make && \
+    make install
 
 
 ##
@@ -27,12 +30,14 @@ RUN cd dist && \
 FROM builder as google-authenticator-libpam-builder
 
 ARG AUTHENTICATOR_LIBPAM_VERSION=1.05
-RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam dist
+RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam src
 
-RUN cd dist && \
+RUN cd src && \
     ./bootstrap.sh && \
-    ./configure --prefix=/ && \
-    make
+    ./configure \
+        --prefix=/dist && \
+    make && \
+    make install
 
 
 ##
@@ -41,19 +46,19 @@ RUN cd dist && \
 FROM builder as openssh-portable-builder
 
 ARG OPENSSH_VERSION=V_7_8_P1
-RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable dist
+RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable src
 
 COPY patches/ /patches/
 
-RUN cd dist && \
+RUN cd src && \
     find ../patches/openssh/** -type f -exec patch -p1 -i {} \; && \
     autoreconf && \
     ./configure \
-        --prefix=/usr \
+        --prefix=/dist/usr \
         --sysconfdir=/etc/ssh \
-        --datadir=/usr/share/openssh \
-        --libexecdir=/usr/lib/ssh \
-        --mandir=/usr/share/man \
+        --datadir=/dist/usr/share/openssh \
+        --libexecdir=/dist/usr/lib/ssh \
+        --mandir=/dist/usr/share/man \
         --with-pid-dir=/run \
         --with-mantype=man \
         --with-privsep-path=/var/empty \
@@ -62,20 +67,21 @@ RUN cd dist && \
         --with-ssl-engine \
         --disable-wtmp \
         --with-pam && \
-    make
+    make && \
+    make install
 
 
 ##
 ## Bastion image
 ##
-FROM builder
+FROM alpine:3.8
 
 LABEL maintainer="erik@cloudposse.com"
 
 USER root
 
 ## Install dependencies
-RUN apk --update add curl drill groff util-linux bash xauth gettext shadow sudo && \
+RUN apk --update add curl drill groff util-linux bash xauth gettext openssl-dev shadow sudo && \
     rm -rf /etc/ssh/ssh_host_*_key* && \
     rm -f /usr/bin/ssh-agent && \
     rm -f /usr/bin/ssh-keyscan && \
@@ -89,19 +95,13 @@ RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION
     chmod 755 /usr/bin/sudosh
 
 ## Install Duo
-COPY --from=duo-builder dist dist
-RUN make --directory=dist install && \
-    rm -rf dist
+COPY --from=duo-builder dist/ /
 
 ## Install Google Authenticator PAM module
-COPY --from=google-authenticator-libpam-builder dist dist
-RUN make --directory=dist install && \
-    rm -rf dist
+COPY --from=google-authenticator-libpam-builder dist/ /
 
 ## Install OpenSSH Portable
-COPY --from=openssh-portable-builder dist dist
-RUN make --directory=dist install && \
-    rm -rf dist
+COPY --from=openssh-portable-builder dist/ /
 
 ## System
 ENV TIMEZONE="Etc/UTC" \
