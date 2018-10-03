@@ -35,7 +35,7 @@ RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://g
 RUN cd src && \
     ./bootstrap.sh && \
     ./configure \
-        --prefix=/dist/ && \
+        --prefix=/dist && \
     make && \
     make install
 
@@ -56,9 +56,9 @@ RUN cd src && \
     ./configure \
         --prefix=/dist/usr \
         --sysconfdir=/etc/ssh \
-        --datadir=/usr/share/openssh \
-        --libexecdir=/usr/lib/ssh \
-        --mandir=/usr/share/man \
+        --datadir=/dist/usr/share/openssh \
+        --libexecdir=/dist/usr/lib/ssh \
+        --mandir=/dist/usr/share/man \
         --with-pid-dir=/run \
         --with-mantype=man \
         --with-privsep-path=/var/empty \
@@ -81,7 +81,7 @@ LABEL maintainer="erik@cloudposse.com"
 USER root
 
 ## Install dependencies
-RUN apk --update add curl drill groff util-linux bash xauth gettext shadow sudo && \
+RUN apk --update add curl drill groff util-linux bash xauth gettext openssl-dev shadow sudo && \
     rm -rf /etc/ssh/ssh_host_*_key* && \
     rm -f /usr/bin/ssh-agent && \
     rm -f /usr/bin/ssh-keyscan && \
@@ -95,13 +95,13 @@ RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION
     chmod 755 /usr/bin/sudosh
 
 ## Install Duo
-COPY --from=duo-builder dist /
+COPY --from=duo-builder dist/ /
 
 ## Install Google Authenticator PAM module
-COPY --from=google-authenticator-libpam-builder dist /
+COPY --from=google-authenticator-libpam-builder dist/ /
 
 ## Install OpenSSH Portable
-COPY --from=openssh-portable-builder dist /
+COPY --from=openssh-portable-builder dist/ /
 
 ## System
 ENV TIMEZONE="Etc/UTC" \
