@@ -18,7 +18,7 @@ RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
 
 RUN cd src && \
     ./configure \
-        --with-pam \
+        --with-pam=/dist/lib64/security \
         --prefix=/dist/usr && \
     make && \
     make install
@@ -66,7 +66,7 @@ RUN cd src && \
         --with-md5-passwords \
         --with-ssl-engine \
         --disable-wtmp \
-        --with-pam && \
+        --with-pam=/dist/lib64/security && \
     make && \
     make install
 
