@@ -14,13 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if ! [ -t 1 ]; then
-  echo "MFA setup required"
-  exit 1
-fi
-
 until [ -f "${HOME}/.google_authenticator" ]; do
-  if [[ "$SSH_ORIGINAL_COMMAND" =~ ^(rsync|nc|scp) ]]; then
+  if ! [[ -t 1 ]] || [[ "$SSH_ORIGINAL_COMMAND" =~ ^(rsync|nc|scp) ]]; then
     echo "MFA setup required"
     exit 1
   else 
