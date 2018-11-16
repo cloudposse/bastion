@@ -121,7 +121,7 @@ The enforcer is able to send notifications to a slack channel anytime there is a
 | `SLACK_WEBHOOK_URL`        | Webhook URL                                         |           |
 | `SLACK_USERNAME`           | Slack handle of bot (defaults to short-dns name)    |           |
 | `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
-| `SLACK_FATAL_ERRORS`       | Deny logins if slack notificaiton fails             | `true`    |
+| `SLACK_FATAL_ERRORS`       | Deny logins if slack notification fails             | `true`    |
 
 
 ##### SSH Auditor
