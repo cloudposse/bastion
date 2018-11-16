@@ -128,7 +128,7 @@ ENV ENFORCER_ENABLED="true" \
 ## Enable Rate Limiting
 ENV RATE_LIMIT_ENABLED="true"
 
-## Tolerate 5 consecutive fairues    
+## Tolerate 5 consecutive fairues
 ENV RATE_LIMIT_MAX_FAILURES="5"
 ## Lock accounts out for 300 seconds (5 minutes) after repeated failures
 ENV RATE_LIMIT_LOCKOUT_TIME="300"
