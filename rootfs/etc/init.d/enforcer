@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 umask 0066
 
 if [ "${ENFORCER_ENABLED}" == "true" ]; then

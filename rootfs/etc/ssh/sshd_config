@@ -75,7 +75,7 @@ Subsystem	sftp	/usr/lib/ssh/sftp-server -l VERBOSE
 # the following are HPN related configuration options
 # tcp receive buffer polling. disable in non autotuning kernels
 #TcpRcvBufPoll yes
- 
+
 # disable hpn performance boosts
 #HPNDisabled no
 

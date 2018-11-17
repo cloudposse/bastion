@@ -14,12 +14,12 @@
  	int i, len;
  	int file_len;
 +	off_t delta_pos;
- 
+
  	transferred = *counter - (cur_pos ? cur_pos : start_pos);
  	cur_pos = *counter;
  	now = monotime_double();
  	bytes_left = end_pos - cur_pos;
- 
+
 +	delta_pos = cur_pos - last_pos;
 +	if (delta_pos > max_delta_pos)
 +		max_delta_pos = delta_pos;
@@ -28,7 +28,7 @@
  		elapsed = now - last_update;
  	else {
 @@ -158,7 +165,7 @@
- 
+
  	/* filename */
  	buf[0] = '\0';
 -	file_len = win_size - 35;
@@ -39,7 +39,7 @@
 @@ -188,6 +195,15 @@
  	    (off_t)bytes_per_second);
  	strlcat(buf, "/s ", win_size);
- 
+
 +	/* instantaneous rate */
 +	if (bytes_left > 0)
 +		format_rate(buf + strlen(buf), win_size - strlen(buf),
@@ -53,10 +53,10 @@
  	if (!transferred)
  		stalled += elapsed;
 @@ -224,6 +240,7 @@
- 
+
  	atomicio(vwrite, STDOUT_FILENO, buf, win_size - 1);
  	last_update = now;
 +	last_pos = cur_pos;
  }
- 
+
  /*ARGSUSED*/

@@ -153,7 +153,7 @@ usage: |-
   | `SLACK_WEBHOOK_URL`        | Webhook URL                                         |           |
   | `SLACK_USERNAME`           | Slack handle of bot (defaults to short-dns name)    |           |
   | `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
-  | `SLACK_FATAL_ERRORS`       | Deny logins if slack notificaiton fails             | `true`    |
+  | `SLACK_FATAL_ERRORS`       | Deny logins if slack notification fails             | `true`    |
 
 
   ##### SSH Auditor
@@ -188,7 +188,7 @@ usage: |-
   - [@aws](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/), for providing detailed instructions on how to do SSH session logging.
   - [@duo](https://duo.com/docs/duounix), for providing excellent documentation
   - [@google](https://github.com/google/google-authenticator-libpam) for contributing Google Authenticator to the Open Source community
-  
+
 # Contributors to this project
 contributors:
   - name: "Erik Osterman"

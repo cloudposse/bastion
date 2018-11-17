@@ -15,9 +15,9 @@ services:
 install:
 - make init
 - make docker:login
-# Travis has a default umask of 0002 before executing `git clone`. 
+# Travis has a default umask of 0002 before executing `git clone`.
 # There is no workaround. Even git does not track directory modes.
-# This has the unforunate consequance of granting g+rw to any directory we `ADD`. 
+# This has the unforunate consequance of granting g+rw to any directory we `ADD`.
 - find rootfs/ -type d -exec chmod 755 {} \;
 
 script:
