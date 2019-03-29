@@ -1,3 +1,3 @@
 #%PAM-1.0
-auth requisite pam_duo.so  conf=/etc/pam_duo.conf
+auth requisite /lib64/security/pam_duo.so  conf=/etc/pam_duo.conf
 
