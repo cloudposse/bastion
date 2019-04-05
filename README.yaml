@@ -40,9 +40,6 @@ description: |-
 
   ![MFA Setup GIF](docs/demo.gif)
 
-  When using Duo as the MFA provider, this becomes even more magical because Duo supports automatic Push notifications to your mobile device.
-  Just approve the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
-
   ### Slack Notifications
 
   Here's what it looks like when someone connects to the bastion if Slack notifications are enabled.
@@ -77,6 +74,23 @@ quickstart: |-
   ```
 
   The first time you connect, you'll be asked to setup your MFA device. Subsequently, each time you connect, you'll be prompted to enter your MFA token.
+
+
+mfa_providres: |-
+
+  This documentation only recognises Google Authenticator and Duo.
+
+  ### Google Authenticator
+
+  Google Authenticator is a free, open-source, and easy to setup MFA.
+  It's less secure than Duo because tokens are stored on the server under each user account.
+
+
+  ### Duo
+  
+  Duo is an enterprise paid-for service. It has excellent push-notification support so that MFA requests can be approved or declined without opening an app.
+  Details here: https://duo.com/pricing
+
 
 # How to use this project
 usage: |-
@@ -115,9 +129,6 @@ usage: |-
 
   ##### Duo Settings
 
-  Duo is a enterprise MFA provider that is very affordable. Details here: https://duo.com/pricing
-
-
   | ENV               |      Description                                    |  Default |
   |-------------------|:----------------------------------------------------|:--------:|
   | `MFA_PROVIDER`    |  Enable the Duo MFA provider                        | duo      |
@@ -130,9 +141,6 @@ usage: |-
 
 
   ##### Google Authenticator Settings
-
-  Google Authenticator is a free & open source MFA solution. It's less secure than Duo because tokens are stored on the server under each user account.
-
 
   | ENV               |      Description                                    |  Default              |
   |-------------------|:----------------------------------------------------|:---------------------:|
@@ -166,7 +174,6 @@ usage: |-
 
   The SSH auditor uses [`sudosh`](https://github.com/cloudposse/sudosh/) to record entire SSH sessions (`stdin`, `stdout`, and `stderr`).
 
-
   | ENV                   |      Description                                    |  Default     |
   |-----------------------|:----------------------------------------------------|:------------:|
   | `SSH_AUDIT_ENABLED`   |  Enable the SSH Audit facility                      | `true`       |
@@ -176,7 +183,6 @@ usage: |-
   Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`. By default, `root` will automatically be updated to use `sudosh`.
 
   Use the `sudoreplay` command to audit/replay sessions.
-
 
   #### User Accounts & SSH Keys
 
