@@ -86,19 +86,16 @@ mfa_providers: |-
   Google Authenticator is a free, open-source, and easy to setup MFA.
   It's less secure than Duo because tokens are stored on the server under each user account.
 
-
   ### Duo
   
   Duo is an enterprise paid-for service. It has excellent push-notification support so that MFA requests can be approved or declined without opening an app.
   Details here: https://duo.com/pricing
-
 
 usage: |-
 
   ### Running
 
   Refer to the [Environment Variables](#environment-variables) section below to tune how the `bastion` operates.
-
 
   ```bash
   $ docker run -p 1234:22 cloudposse/bastion:latest
