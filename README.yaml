@@ -62,7 +62,7 @@ quickstart: |-
 
 
   ```bash
-  $ docker run -it -p 1234:22 \
+  docker run -it -p 1234:22 \
        -e MFA_PROVIDER=google-authenticator \
        -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys \
        cloudposse/bastion
@@ -70,7 +70,7 @@ quickstart: |-
 
   Now, in another terminal you should be able to run:
   ```bash
-  $ ssh root@localhost -p 1234
+  ssh root@localhost -p 1234
   ```
 
   The first time you connect, you'll be asked to setup your MFA device. Subsequently, each time you connect, you'll be prompted to enter your MFA token.
@@ -92,8 +92,8 @@ mfa_providres: |-
   Details here: https://duo.com/pricing
 
 
-# How to use this project
 usage: |-
+
   ### Running
 
   Refer to the [Environment Variables](#environment-variables) section below to tune how the `bastion` operates.
@@ -110,7 +110,6 @@ usage: |-
   $ cd bastion
   $ make docker:build
   ```
-
 
   ### Configuration
 
@@ -139,13 +138,11 @@ usage: |-
   | `DUO_AUTOPUSH`    |  Automatically send a push notification             | yes      |
   | `DUO_PROMPTS`     |  How many times to prompt for MFA                   | 1        |
 
-
   ##### Google Authenticator Settings
 
   | ENV               |      Description                                    |  Default              |
   |-------------------|:----------------------------------------------------|:---------------------:|
   | `MFA_PROVIDER`    |  Enable the Google Authenticator provider           | google-authenticator  |
-
 
   ##### Enforcer Settings
 
@@ -168,7 +165,6 @@ usage: |-
   | `SLACK_USERNAME`           | Slack handle of bot (defaults to short-dns name)    |           |
   | `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
   | `SLACK_FATAL_ERRORS`       | Deny logins if slack notification fails             | `true`    |
-
 
   ##### SSH Auditor
 
