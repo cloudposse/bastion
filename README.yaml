@@ -38,7 +38,7 @@ description: |-
 
   Here's a demo of what a user experiences when setting up Google Authenticator for the first time.
 
-  ![Demo 1](docs/demo.gif)
+  ![MFA Setup GIF](docs/demo.gif)
 
   When using Duo as the MFA provider, this becomes even more magical because Duo supports automatic Push notifications to your mobile device.
   Just approve the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
@@ -47,7 +47,7 @@ description: |-
 
   Here's what it looks like when someone connects to the bastion if Slack notifications are enabled.
 
-  ![Demo 2](docs/slack.png)
+  ![Slack notification example](docs/slack.png)
 
   We recommend using Slack notifications for self-reporting.
   * Any time a user accesses production systems, they should reply to the slack notification to justify their remote access.
