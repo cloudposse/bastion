@@ -9,20 +9,18 @@
 This is a secure/locked-down bastion implemented as a Docker Container. It uses Alpine Linux as the base image and ships with support for Google Authenticator & DUO MFA support.
 
 It was designed to be used on Kubernetes together with [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provide secure remote access to production clusters.
+
 ### MFA Setup & Usage
 
 Here's a demo of what a user experiences when setting up Google Authenticator for the first time.
 
-![Demo 1](docs/demo.gif)
-
-When using Duo as the MFA provider, this becomes even more magical because Duo supports automatic Push notifications to your mobile device.
-Just approve the request on your mobile phone (e.g. with a thumb press on iOS) when prompted.
+![MFA Setup GIF](docs/demo.gif)
 
 ### Slack Notifications
 
 Here's what it looks like when someone connects to the bastion if Slack notifications are enabled.
 
-![Demo 2](docs/slack.png)
+![Slack notification example](docs/slack.png)
 
 We recommend using Slack notifications for self-reporting.
 * Any time a user accesses production systems, they should reply to the slack notification to justify their remote access.
@@ -59,27 +57,38 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ## Usage
 
+
+### MFA Providers
+
+This documentation only recognises Google Authenticator and Duo.
+
+- Google Authenticator
+  - Google Authenticator is a free, open-source, and easy to setup MFA.
+  - It's less secure than Duo because tokens are stored on the server under each user account.
+- Duo
+  - Duo is an enterprise paid-for service. It has excellent push-notification support so that MFA requests can be approved or declined without opening an app.
+  - Details here: https://duo.com/pricing
+
 ### Running
 
 Refer to the [Environment Variables](#environment-variables) section below to tune how the `bastion` operates.
 
-
+This command will pull the `latest` tag if it is not already in your image list:
 ```bash
-$ docker run -p 1234:22 cloudposse/bastion:latest
+docker run -p 1234:22 cloudposse/bastion:latest
 ```
 
 ### Building
 
 ```bash
-$ git clone https://github.com/cloudposse/bastion.git
-$ cd bastion
-$ make docker:build
+git clone https://github.com/cloudposse/bastion.git
+cd bastion
+make docker:build
 ```
-
 
 ### Configuration
 
-## Recommendations
+#### Recommendations
 
 * Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs in `/var/log/sudo-io`
 * Use the bastion as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
@@ -94,9 +103,6 @@ The following tables lists the most relevant environment variables of the `basti
 
 ##### Duo Settings
 
-Duo is a enterprise MFA provider that is very affordable. Details here: https://duo.com/pricing
-
-
 | ENV               |      Description                                    |  Default |
 |-------------------|:----------------------------------------------------|:--------:|
 | `MFA_PROVIDER`    |  Enable the Duo MFA provider                        | duo      |
@@ -107,16 +113,11 @@ Duo is a enterprise MFA provider that is very affordable. Details here: https://
 | `DUO_AUTOPUSH`    |  Automatically send a push notification             | yes      |
 | `DUO_PROMPTS`     |  How many times to prompt for MFA                   | 1        |
 
-
 ##### Google Authenticator Settings
-
-Google Authenticator is a free & open source MFA solution. It's less secure than Duo because tokens are stored on the server under each user account.
-
 
 | ENV               |      Description                                    |  Default              |
 |-------------------|:----------------------------------------------------|:---------------------:|
 | `MFA_PROVIDER`    |  Enable the Google Authenticator provider           | google-authenticator  |
-
 
 ##### Enforcer Settings
 
@@ -140,11 +141,9 @@ The enforcer is able to send notifications to a slack channel anytime there is a
 | `SLACK_TIMEOUT`            | Request timeout                                     | `2`       |
 | `SLACK_FATAL_ERRORS`       | Deny logins if slack notification fails             | `true`    |
 
-
 ##### SSH Auditor
 
 The SSH auditor uses [`sudosh`](https://github.com/cloudposse/sudosh/) to record entire SSH sessions (`stdin`, `stdout`, and `stderr`).
-
 
 | ENV                   |      Description                                    |  Default     |
 |-----------------------|:----------------------------------------------------|:------------:|
@@ -155,7 +154,6 @@ This will require that users login with the `/usr/bin/sudosh` shell.
 Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`. By default, `root` will automatically be updated to use `sudosh`.
 
 Use the `sudoreplay` command to audit/replay sessions.
-
 
 #### User Accounts & SSH Keys
 
@@ -177,22 +175,28 @@ You can extend the enforcement policies by adding shell scripts to `etc/enforce.
 ## Quick Start
 
 
-Here's how you can quickly demo the `bastion`. We assume you have `~/.ssh/authorized_keys` properly configured and your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
+Here's how you can quickly demo the `bastion`. This is not a Quick Start guide for production / actual usage.
+
+### Assumptions
+
+- We assume you have `~/.ssh/authorized_keys` properly configured 
+- Your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
 
 
+As a non-escalated user:
 ```bash
-$ docker run -it -p 1234:22 \
-     -e MFA_PROVIDER=google-authenticator \
-     -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys
-     cloudposse/bastion
+docker run -it -p 1234:22 \
+    -e MFA_PROVIDER=google-authenticator \
+    -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys \
+    cloudposse/bastion
 ```
 
-Now, in another terminal you should be able to run:
+Now, let's attempt to connect to the Bastion:
 ```bash
-$ ssh root@localhost -p 1234
+ssh root@localhost -p 1234
 ```
 
-The first time you connect, you'll be asked to setup your MFA device. Subsequently, each time you connect, you'll be prompted to enter your MFA token.
+The first time you connect, you'll be asked to setup your MFA device ([GIF](docs/demo.gif)). Subsequently, each time you connect, you'll be prompted to enter your MFA token.
 
 
 
@@ -257,7 +261,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2018 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2019 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
@@ -312,13 +316,15 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 
 ### Contributors
 
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Marji Cermak][marji_avatar]][marji_homepage]<br/>[Marji Cermak][marji_homepage] |
-|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Marji Cermak][marji_avatar]][marji_homepage]<br/>[Marji Cermak][marji_homepage] | [![Oscar Sullivan][osulli_avatar]][osulli_homepage]<br/>[Oscar Sullivan][osulli_homepage] |
+|---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
   [osterman_avatar]: https://github.com/osterman.png?size=150
   [marji_homepage]: https://github.com/marji
   [marji_avatar]: https://github.com/marji.png?size=150
+  [osulli_homepage]: https://github.com/osulli
+  [osulli_avatar]: https://github.com/osulli.png?size=150
 
 
 
