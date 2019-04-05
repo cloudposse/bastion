@@ -55,7 +55,12 @@ description: |-
 
 quickstart: |-
 
-  Here's how you can quickly demo the `bastion`. We assume you have `~/.ssh/authorized_keys` properly configured and your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
+  Here's how you can quickly demo the `bastion`. This is not a Quick Start guide for production / actual usage.
+
+  ### Assumptions
+
+  - We assume you have `~/.ssh/authorized_keys` properly configured 
+  - Your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
 
 
   ```bash
