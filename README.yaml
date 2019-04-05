@@ -61,6 +61,7 @@ quickstart: |-
   - Your SSH key (e.g. `~/.ssh/id_rsa`) added to your SSH agent.
 
 
+  As a non-escalated user:
   ```bash
   docker run -it -p 1234:22 \
        -e MFA_PROVIDER=google-authenticator \
@@ -68,12 +69,12 @@ quickstart: |-
        cloudposse/bastion
   ```
 
-  Now, in another terminal you should be able to run:
+  Now, let's attempt to connect to the Bastion:
   ```bash
   ssh root@localhost -p 1234
   ```
 
-  The first time you connect, you'll be asked to setup your MFA device. Subsequently, each time you connect, you'll be prompted to enter your MFA token.
+  The first time you connect, you'll be asked to setup your MFA device ([GIF](docs/demo.gif)). Subsequently, each time you connect, you'll be prompted to enter your MFA token.
 
 
 mfa_providres: |-
