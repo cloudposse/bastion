@@ -10,6 +10,8 @@ This is a secure/locked-down bastion implemented as a Docker Container. It uses 
 
 It was designed to be used on Kubernetes together with [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provide secure remote access to production clusters.
 
+Bastion should be used as a "jump host" for accessing other internal systems, rather than provisioning internal nodes on public-subnets with exposed ports.
+
 ### MFA Setup & Usage
 
 Here's a demo of what a user experiences when setting up Google Authenticator for the first time.
@@ -91,11 +93,13 @@ make docker:build
 #### Recommendations
 
 * Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs in `/var/log/sudo-io`
-* Use the bastion as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
 * Sync the contents of `/var/log/sudo-io` to a remote, offsite location. If using S3, we recommend enabling bucket-versioning.
-* Use [`github-authorized-keys](https://github.com/cloudposse/github-authorized-keys/) to automatically provision users; or use the [Helm chart](https://github.com/cloudposse/charts/tree/master/incubator/bastion).
 * Bind-mount `/etc/passwd`, `/etc/shadow` and `/etc/group` into the container as *read-only*
 * Bind-mount `/home` into container; the bastion does not manage authorized keys
+
+#### User Accounts & SSH Keys
+
+The `bastion` does not attempt to manage user accounts. We suggest using [Cloudposse's github-authorized-keys module](https://github.com/cloudposse/github-authorized-keys/) to automatically provision users; or use the [Helm chart](https://github.com/cloudposse/charts/tree/master/incubator/bastion).
 
 #### Environment Variables
 
@@ -154,10 +158,6 @@ This will require that users login with the `/usr/bin/sudosh` shell.
 Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`. By default, `root` will automatically be updated to use `sudosh`.
 
 Use the `sudoreplay` command to audit/replay sessions.
-
-#### User Accounts & SSH Keys
-
-The `bastion` does not attempt to manage user accounts. We suggest using [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provision user accounts and SSH keys. We provide a [chart](https://github.com/cloudposse/charts/incubator/bastion.git) of how we recommend doing it.
 
 ### Extending
 
