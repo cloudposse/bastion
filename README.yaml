@@ -33,6 +33,7 @@ description: |-
   This is a secure/locked-down bastion implemented as a Docker Container. It uses Alpine Linux as the base image and ships with support for Google Authenticator & DUO MFA support.
 
   It was designed to be used on Kubernetes together with [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provide secure remote access to production clusters.
+  
   ### MFA Setup & Usage
 
   Here's a demo of what a user experiences when setting up Google Authenticator for the first time.
