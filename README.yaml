@@ -110,7 +110,7 @@ usage: |-
 
   ### Configuration
 
-  ## Recommendations
+  #### Recommendations
 
   * Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs in `/var/log/sudo-io`
   * Use the bastion as a "jump host" for accessing other internal systems rather than installing a lot of unnecessary stuff, which increases the overall attack surface.
@@ -194,7 +194,6 @@ usage: |-
   - [@duo](https://duo.com/docs/duounix), for providing excellent documentation
   - [@google](https://github.com/google/google-authenticator-libpam) for contributing Google Authenticator to the Open Source community
 
-# Contributors to this project
 contributors:
   - name: "Erik Osterman"
     github: "osterman"
