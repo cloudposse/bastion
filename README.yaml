@@ -114,9 +114,12 @@ usage: |-
 
   * Do not allow `root` (or `sudo`) access to this container as doing so would allow remote users to manipulate audit-logs in `/var/log/sudo-io`
   * Sync the contents of `/var/log/sudo-io` to a remote, offsite location. If using S3, we recommend enabling bucket-versioning.
-  * Use [Cloudposse's github-authorized-keys module](https://github.com/cloudposse/github-authorized-keys/) to automatically provision users; or use the [Helm chart](https://github.com/cloudposse/charts/tree/master/incubator/bastion).
   * Bind-mount `/etc/passwd`, `/etc/shadow` and `/etc/group` into the container as *read-only*
   * Bind-mount `/home` into container; the bastion does not manage authorized keys
+
+  #### User Accounts & SSH Keys
+
+  The `bastion` does not attempt to manage user accounts. We suggest using [Cloudposse's github-authorized-keys module](https://github.com/cloudposse/github-authorized-keys/) to automatically provision users; or use the [Helm chart](https://github.com/cloudposse/charts/tree/master/incubator/bastion).
 
   #### Environment Variables
 
@@ -175,10 +178,6 @@ usage: |-
   Update user's default shell by running the command: `usermod -s /usr/bin/sudosh $username`. By default, `root` will automatically be updated to use `sudosh`.
 
   Use the `sudoreplay` command to audit/replay sessions.
-
-  #### User Accounts & SSH Keys
-
-  The `bastion` does not attempt to manage user accounts. We suggest using [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provision user accounts and SSH keys. We provide a [chart](https://github.com/cloudposse/charts/incubator/bastion.git) of how we recommend doing it.
 
   ### Extending
 
