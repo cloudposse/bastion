@@ -77,7 +77,7 @@ quickstart: |-
   The first time you connect, you'll be asked to setup your MFA device ([GIF](docs/demo.gif)). Subsequently, each time you connect, you'll be prompted to enter your MFA token.
 
 
-mfa_providres: |-
+mfa_providers: |-
 
   This documentation only recognises Google Authenticator and Duo.
 
