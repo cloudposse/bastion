@@ -1,9 +1,9 @@
 ##
 ## Base builder image
 ##
-FROM alpine:3.8 as builder
+FROM alpine:3.9 as builder
 
-RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget
+RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget zlib-dev
 
 
 ##
@@ -45,7 +45,7 @@ RUN cd src && \
 ##
 FROM builder as openssh-portable-builder
 
-ARG OPENSSH_VERSION=V_7_8_P1
+ARG OPENSSH_VERSION=V_8_0_P1
 RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable src
 
 COPY patches/ /patches/
@@ -74,7 +74,7 @@ RUN cd src && \
 ##
 ## Bastion image
 ##
-FROM alpine:3.8
+FROM alpine:3.9
 
 LABEL maintainer="erik@cloudposse.com"
 
