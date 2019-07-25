@@ -3,8 +3,8 @@
 This example starts up cloudposse bastion, github-authorized-keys and etcd.  
 
 ### Requirements
-You will need to [install docker-compose](https://docs.docker.com/compose/install/).
-Have an [SSH key added to your github account](https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account).
+1. You will need to [install docker-compose](https://docs.docker.com/compose/install/).  
+2. Have an [SSH key added to your github account](https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account).
 ##### Recommended
 Create a slack webhook. Follow this simple [guide](https://api.slack.com/tutorials/slack-apps-hello-world).  
 Copy `bastion.env.example` to `bastion.env` and set the following variable;  
