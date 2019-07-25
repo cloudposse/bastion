@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -n "${SSH_AUTHORIZED_KEYS_COMMAND}" ] && [ "${SSH_AUTHORIZED_KEYS_COMMAND}" != "none" ]; then
+  echo "- Enabling SSH Authorized Keys Command"
+  echo "AuthorizedKeysCommand ${SSH_AUTHORIZED_KEYS_COMMAND}" >> /etc/ssh/sshd_config
+  echo "AuthorizedKeysCommandUser ${SSH_AUTHORIZED_KEYS_COMMAND_USER}" >> /etc/ssh/sshd_config
+fi
