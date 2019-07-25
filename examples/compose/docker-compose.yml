@@ -12,6 +12,9 @@ services:
     volumes:
       - home:/home
       - etc:/etc
+      - "./scripts/ssh-authorized-keys-command:/etc/init.d/ssh-authorized-keys-command"
+      - "./scripts/ssh-api-url:/etc/init.d/ssh-api-url"
+      - "./scripts/ssh-log-level:/etc/init.d/ssh-log-level"
   gak:
     image: cloudposse/github-authorized-keys
     ports:
