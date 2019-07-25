@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "- Setting SSH LogLevel to ${LOGLEVEL:-INFO}"
+echo "LogLevel ${LOGLEVEL:-INFO}" >> /etc/ssh/sshd_config

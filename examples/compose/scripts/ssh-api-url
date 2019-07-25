@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -n "${API_URL}" ] && [ "${API_URL}" != "none" ]; then
+  echo "- Setting SSH Authorized Keys API URL"
+  sed -i s!http://localhost:301/user/%s/authorized_keys!${API_URL}!g /usr/bin/github-authorized-keys
+fi
