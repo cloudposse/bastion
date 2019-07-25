@@ -1,0 +1,40 @@
+version: "2"
+volumes:
+  home:
+  etc:
+services:
+  bastion:
+    image: cloudposse/bastion
+    ports:
+      - "1234:22"
+    env_file:
+      - bastion.env
+    volumes:
+      - home:/home
+      - etc:/etc
+      - "./scripts/ssh-authorized-keys-command:/etc/init.d/ssh-authorized-keys-command"
+      - "./scripts/ssh-api-url:/etc/init.d/ssh-api-url"
+      - "./scripts/ssh-log-level:/etc/init.d/ssh-log-level"
+  gak:
+    image: cloudposse/github-authorized-keys
+    ports:
+      - "301:301"
+    volumes:
+      - home:/home
+      - etc:/etc
+    env_file:
+      - gak.env
+    links:
+      - "etcd:etcd"
+    restart: always
+  etcd:
+    image: quay.io/coreos/etcd:v2.3.7
+    command:
+      - "--advertise-client-urls=http://0.0.0.0:2379,http://0.0.0.0:4001"
+      - "--listen-client-urls=http://0.0.0.0:2379,http://0.0.0.0:4001"
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+      - "4001:4001"
+      - "7001:7001"
+    restart: always
