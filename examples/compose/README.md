@@ -61,19 +61,17 @@ bastion/examples/compose$ docker-compose down -v
 ## Advanced Usage
 
 ### Build from source
-To build the bastion container from source files in this repo, run;  
+To build the bastion container from source files in this repo;  
+1. Add ```SSH_AUDIT_ENABLED=false``` in your ```bastion.env```. [See Issue #46.](https://github.com/cloudposse/bastion/issues/46)
+2. Run (Note: This may take a while) ;  
 ```
 bastion/examples/compose$ docker-compose -f local.yml up -d --build
 ```
-This may take a while.  
-To clean up, run;  
+ 
+3. To clean up, run;  
 ```
 bastion/examples/compose$ docker-compose -f local.yml down -v
 ```
-
-
-## References
-https://github.com/cloudposse/github-authorized-keys
 
 
 ## References
