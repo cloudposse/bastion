@@ -31,7 +31,7 @@ Connect to bastion via ssh by running.
 ```
 bastion/examples/compose$ ssh <github_user_name>@<docker_ip> -p 1234
 ```
-<docker-ip> may be one of the following;
+`docker_ip` may be one of the following;
 1. localhost
 2. `bastion/examples/compose$ docker-machine ip`
 
@@ -58,11 +58,19 @@ To stop the containers and remove attached volumes, run;
 bastion/examples/compose$ docker-compose down -v
 ```
 
+## Advanced Usage
+
 ### Build from source
-To stop the containers and remove attached volumes, run;
+To build the bastion container from source files in this repo, run;  
 ```
-bastion/examples/compose$ docker-compose down -v
+bastion/examples/compose$ docker-compose -f local.yml up -d --build
 ```
+This may take a while.  
+To clean up, run;  
+```
+bastion/examples/compose$ docker-compose -f local.yml down -v
+```
+
 
 ## References
 https://github.com/cloudposse/github-authorized-keys
