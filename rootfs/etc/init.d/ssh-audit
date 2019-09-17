@@ -7,13 +7,13 @@ if [ "${SSH_AUDIT_ENABLED}" == "true" ]; then
 		Defaults!/usr/bin/sudoreplay !log_output
 		Defaults!REBOOT !log_output
 	EOF
-	echo "# valid login shells" > /etc/shells
 	echo "/usr/bin/sudosh" >> /etc/shells
 	echo "session requisite pam_exec.so quiet /usr/bin/sudosh-add-user" > /etc/pam.d/sudosh
+	echo "auth required pam_shells.so" > /etc/pam.d/chsh
 	[ -w /etc/passwd ] && chsh -s /usr/bin/sudosh root
+	echo "# valid login shells" > /etc/shells
+	echo "/usr/bin/sudosh" >> /etc/shells
 else
 	echo "- Disabling SSH Audit Logs"
 	:>/etc/pam.d/sudosh
 fi
-
-
