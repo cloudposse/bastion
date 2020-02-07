@@ -10,7 +10,7 @@ if [ "${SSH_AUDIT_ENABLED}" == "true" ]; then
 	echo "# valid login shells" > /etc/shells
 	echo "/usr/bin/sudosh" >> /etc/shells
 	echo "session requisite pam_exec.so quiet /usr/bin/sudosh-add-user" > /etc/pam.d/sudosh
-	[ -w /etc/passwd ] && chsh -s /usr/bin/sudosh root
+	[ -w /etc/passwd ] && usermod -s /usr/bin/sudosh root
 else
 	echo "- Disabling SSH Audit Logs"
 	:>/etc/pam.d/sudosh
