@@ -1,18 +1,18 @@
 diff --git a/session.c b/session.c
-index f2cf5200..78901a0f 100644
+index 8c0e54f7..5680e314 100644
 --- a/session.c
 +++ b/session.c
-@@ -696,12 +696,11 @@ do_exec(struct ssh *ssh, Session *s, const char *command)
-        const char *forced = NULL, *tty = NULL;
-        char session_type[1024];
-
-+       original_command = command;
-        if (options.adm_forced_command) {
--               original_command = command;
-                command = options.adm_forced_command;
-                forced = "(config)";
-        } else if (auth_opts->force_command != NULL) {
--               original_command = command;
-                command = auth_opts->force_command;
-                forced = "(key-option)";
-        }
+@@ -666,12 +666,11 @@ do_exec(struct ssh *ssh, Session *s, const char *command)
+ 	const char *forced = NULL, *tty = NULL;
+ 	char session_type[1024];
+ 
++	original_command = command;
+ 	if (options.adm_forced_command) {
+-		original_command = command;
+ 		command = options.adm_forced_command;
+ 		forced = "(config)";
+ 	} else if (auth_opts->force_command != NULL) {
+-		original_command = command;
+ 		command = auth_opts->force_command;
+ 		forced = "(key-option)";
+ 	}

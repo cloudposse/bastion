@@ -1,5 +1,14 @@
 #!/bin/bash
-echo "- Locking down /proc"
-chmod 700 /proc
 
+on_openshift() {
+  VAL=$(curl -s --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/version/openshift | grep gitVersion)
+  [ -z "$VAL" ] && return 1 || return 0
+}
+
+if $(on_openshift); then
+  echo "- OpenShift detected, not locking down /proc"
+else
+  echo "- Locking down /proc"
+  chmod 700 /proc
+fi
 
