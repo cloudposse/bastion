@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${RATE_LIMIT_ENABLED}" ]; then
+if [ "${RATE_LIMIT_ENABLED}" == "true" ]; then
   echo "- Enabling Rate Limits"
   echo "- Users will be locked for ${RATE_LIMIT_LOCKOUT_TIME}s after ${RATE_LIMIT_MAX_FAILURES} failed logins"
   echo "- Fail delay of ${RATE_LIMIT_FAIL_DELAY} micro-seconds"
