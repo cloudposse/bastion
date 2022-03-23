@@ -183,7 +183,7 @@ Here's how you can quickly demo the `bastion`. We assume you have `~/.ssh/author
 ```bash
 $ docker run -it -p 1234:22 \
      -e MFA_PROVIDER=google-authenticator \
-     -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys
+     -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys \
      cloudposse/bastion
 ```
 
