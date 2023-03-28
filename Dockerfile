@@ -29,7 +29,7 @@ RUN cd src && \
 ##
 FROM builder as google-authenticator-libpam-builder
 
-ARG AUTHENTICATOR_LIBPAM_VERSION=1.05
+ARG AUTHENTICATOR_LIBPAM_VERSION=1.09
 RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam src
 
 RUN cd src && \
