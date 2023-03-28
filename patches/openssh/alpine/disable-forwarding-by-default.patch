@@ -2,7 +2,7 @@
 +++ openssh-7.7p1/sshd_config	2018-07-29 03:08:16.340000000 -0500
 @@ -82,9 +82,10 @@
  #UsePAM no
-
+ 
  #AllowAgentForwarding yes
 -#AllowTcpForwarding yes
 -#GatewayPorts no

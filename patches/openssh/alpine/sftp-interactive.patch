@@ -2,7 +2,7 @@
 +++ b/sftp.c	2014-10-24 10:35:22.329199875 +0500
 @@ -2076,8 +2076,10 @@
  		signal(SIGINT, SIG_IGN);
-
+ 
  		if (el == NULL) {
 -			if (interactive)
 +			if (interactive) {

@@ -16,3 +16,11 @@ Also we modified one alpine patch related to realpath, because it is outdated.
 [bsd-compatible-realpath.diff](openssh/cloudposse/bsd-compatible-realpath.diff)
 
 When upgrading version of OpenSSH, the patches might need to be regenerated.
+
+
+## Dev Cheatsheet for Regenerating OpenSSH Patches
+
+```
+git clone --single-branch https://gitlab.alpinelinux.org/alpine/aports.git tmp
+cp tmp/main/openssh/*.patch patches/openssh/alpine/
+```

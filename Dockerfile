@@ -1,9 +1,9 @@
 ##
 ## Base builder image
 ##
-FROM alpine:3.8 as builder
+FROM alpine:3.17 as builder
 
-RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev openssl-dev wget
+RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev zlib-dev openssl-dev wget
 
 
 ##
@@ -45,7 +45,7 @@ RUN cd src && \
 ##
 FROM builder as openssh-portable-builder
 
-ARG OPENSSH_VERSION=V_7_8_P1
+ARG OPENSSH_VERSION=V_9_3_P1
 RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable src
 
 COPY patches/ /patches/
@@ -74,7 +74,7 @@ RUN cd src && \
 ##
 ## Bastion image
 ##
-FROM alpine:3.8
+FROM alpine:3.17
 
 LABEL maintainer="erik@cloudposse.com"
 
@@ -87,7 +87,7 @@ RUN apk --update add curl drill groff util-linux bash xauth gettext openssl-dev 
     rm -f /usr/bin/ssh-keyscan && \
     touch /var/log/lastlog && \
     mkdir -p /var/run/sshd && \
-    mv /etc/profile.d/color_prompt /etc/profile.d/color_prompt.sh
+    ln -s /etc/profile.d/color_prompt.sh.disabled /etc/profile.d/color_prompt.sh
 
 ## Install sudosh
 ENV SUDOSH_VERSION=0.1.3

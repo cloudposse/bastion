@@ -1,12 +1,12 @@
 diff --git a/version.h b/version.h
-index f1bbf00f..502661dc 100644
+index 69e76e63..9cc63293 100644
 --- a/version.h
 +++ b/version.h
 @@ -1,6 +1,6 @@
- /* $OpenBSD: version.h,v 1.82 2018/07/03 11:42:12 djm Exp $ */
-
--#define SSH_VERSION    "OpenSSH_7.8"
-+#define SSH_VERSION    "SERVER"
-
- #define SSH_PORTABLE   "p1"
- #define SSH_RELEASE    SSH_VERSION SSH_PORTABLE
+ /* $OpenBSD: version.h,v 1.97 2023/03/15 21:19:57 djm Exp $ */
+ 
+-#define SSH_VERSION	"OpenSSH_9.3"
++#define SSH_VERSION	"SERVER"
+ 
+ #define SSH_PORTABLE	"p1"
+ #define SSH_RELEASE	SSH_VERSION SSH_PORTABLE
