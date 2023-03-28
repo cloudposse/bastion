@@ -1,0 +1,24 @@
+version: "3.5"
+
+services:
+
+  bastion:
+    build:
+      context: ".."
+      args:
+        VERSION: "test"
+    volumes:
+      - "$PWD/ida_rsa.pub:/home/bastion/.ssh/authorized_keys"
+      - "$PWD/setup.sh:/setup.sh"
+      - "$PWD/google_authenticator:/google_authenticator"
+    environment:
+      LOG_LEVEL: "DEBUG"
+      MFA_PROVIDER: "google-authenticator"
+
+  test:
+    build: "."
+    volumes:
+      - "$PWD/ida_rsa:/root/.ssh/id_rsa"
+      - "$PWD/google_authenticator_code:/code"
+    depends_on:
+      - "bastion"
