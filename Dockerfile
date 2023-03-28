@@ -11,7 +11,7 @@ RUN apk --update add --virtual .build-deps build-base automake autoconf libtool 
 ##
 FROM builder as duo-builder
 
-ARG DUO_VERSION=1.10.5
+ARG DUO_VERSION=2.0.0
 RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
     mkdir -p src && \
     tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C src
