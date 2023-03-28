@@ -90,7 +90,7 @@ RUN apk --update add curl drill groff util-linux bash xauth gettext openssl-dev 
     ln -s /etc/profile.d/color_prompt.sh.disabled /etc/profile.d/color_prompt.sh
 
 ## Install sudosh
-ENV SUDOSH_VERSION=0.1.3
+ENV SUDOSH_VERSION=0.3.0
 RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION}/sudosh_linux_386 -O /usr/bin/sudosh && \
     chmod 755 /usr/bin/sudosh
 
