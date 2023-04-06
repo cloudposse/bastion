@@ -3,3 +3,6 @@ Makefile.build-harness
 
 .idea
 *.iml
+
+test/ida_rsa
+test/ida_rsa.pub
