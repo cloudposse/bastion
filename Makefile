@@ -4,6 +4,8 @@ export DOCKER_IMAGE_NAME ?= $(DOCKER_IMAGE):$(DOCKER_TAG)
 export DOCKER_BUILD_FLAGS =
 COPYRIGHT_SOFTWARE_DESCRIPTION := A secure Bastion host implemented as Docker Container running Alpine Linux with Google Authenticator & DUO MFA support
 
+.PHONY: test
+
 include $(shell curl --silent -O "https://raw.githubusercontent.com/cloudposse/build-harness/master/templates/Makefile.build-harness"; echo Makefile.build-harness)
 
 reset:
@@ -26,3 +28,6 @@ run: reset
 		-e MFA_PROVIDER=google-authenticator \
 		-e SLACK_ENABLED=true \
 			$(DOCKER_IMAGE_NAME)
+
+test:
+	pushd test > /dev/null; ./test.sh; popd > /dev/null
