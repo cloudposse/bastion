@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# Generating temp keys
+rm -rf ida_rsa*
 ssh-keygen -q -f ida_rsa -N ""
-chmod 600 /root/.ssh/ida_rsa
+chmod 600 ida_rsa
 
 docker compose up --build bastion -d
 docker compose exec bastion /setup.sh
