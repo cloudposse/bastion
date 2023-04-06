@@ -102,6 +102,13 @@ $ cd bastion
 $ make docker:build
 ```
 
+### Testing
+
+Run basic connection tests
+
+```bash
+$ make test
+```
 
 ### Configuration
 
@@ -185,7 +192,7 @@ Use the `sudoreplay` command to audit/replay sessions.
 
 #### User Accounts & SSH Keys
 
-The `bastion` does not attempt to manage user accounts. We suggest using [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provision user accounts and SSH keys. We provide a [chart](https://github.com/cloudposse/charts/incubator/bastion.git) of how we recommend doing it.
+The `bastion` does not attempt to manage user accounts. We suggest using [GitHub Authorized Keys](https://github.com/cloudposse/github-authorized-keys) to provision user accounts and SSH keys. We provide a [chart](https://github.com/cloudposse/charts/tree/master/incubator/bastion) of how we recommend doing it.
 
 ### Extending
 
