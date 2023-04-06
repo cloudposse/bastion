@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Generating temp keys
-rm -rf ida_rsa*
-ssh-keygen -q -f ida_rsa -N ""
-chmod 600 ida_rsa
+rm -rf fixtures/auth/ida_rsa*
+ssh-keygen -q -f fixtures/auth/ida_rsa -N ""
+chmod 600 fixtures/auth/ida_rsa
 
+docker compose down
 docker compose up --build bastion -d
-docker compose exec bastion /setup.sh
-docker compose run --build test /test_client.sh
+docker compose exec bastion /scripts/setup.sh
+docker compose run --build test /scripts/google_auth_test.sh
 
 retVal=$?
 
@@ -41,5 +42,3 @@ if [ $retVal -ne 0 ]; then
 else
   echo "* Slack API Connection Test Succeeded"
 fi
-
-
