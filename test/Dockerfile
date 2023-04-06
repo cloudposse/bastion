@@ -4,7 +4,7 @@ RUN apk add \
 	openssh-client \
 	sshpass
 
-COPY ./client_test.sh /
-RUN chmod 755 /client_test.sh
+COPY ./test_client.sh /
+RUN chmod 755 /test_client.sh
 
-CMD ./client_test.sh
+CMD ./test_client.sh

@@ -1,15 +1,13 @@
 #!/bin/bash
 
-
-# regenerate id_rsa and id_rsa.pub - requires that the system running tests have ssh-keygen
+# Generating temp keys
+rm -rf ida_rsa*
 ssh-keygen -q -f ida_rsa -N ""
-
-
-# test script to control starting and running everything in right order.
+chmod 600 ida_rsa
 
 docker compose up --build bastion -d
 docker compose exec bastion /setup.sh
-docker compose run --build test /client_test.sh
+docker compose run --build test /test_client.sh
 
 retVal=$?
 
