@@ -1,0 +1,352 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Bastion
+
+Parameters:
+
+  KeyPairName:
+    Description: >-
+      Enter a Public/private key pair. If you do not have one in this region,
+      please create it before continuing
+    Type: 'AWS::EC2::KeyPair::KeyName'
+  NumBastionHosts:
+    AllowedValues:
+      - '1'
+      - '2'
+      - '3'
+      - '4'
+    Default: '1'
+    Description: Enter the number of bastion hosts to create
+    Type: String
+  NetworkStackName:
+    Description: Name of an active CloudFormation stack of networking resources
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
+
+Resources:
+
+  BastionAutoScalingGroup:
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
+    Properties:
+      LaunchConfigurationName: !Ref BastionLaunchConfiguration
+      VPCZoneIdentifier:
+        - !ImportValue
+            Fn::Sub: "${NetworkStackName}-PublicSubnet1ID"
+        - !ImportValue
+            Fn::Sub: "${NetworkStackName}-PublicSubnet2ID"
+        - !ImportValue
+            Fn::Sub: "${NetworkStackName}-PublicSubnet3ID"
+      MinSize: 0
+      MaxSize: 3
+      Cooldown: '300'
+      DesiredCapacity: !Ref NumBastionHosts
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}
+          PropagateAtLaunch: 'true'
+    CreationPolicy:
+      ResourceSignal:
+        Count: !Ref NumBastionHosts
+        Timeout: PT30M
+
+  BastionECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub ${AWS::StackName}
+
+  BastionEC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ec2.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: ecs-service
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action: [
+              'ecs:CreateCluster',
+              'ecs:DeregisterContainerInstance',
+              'ecs:DiscoverPollEndpoint',
+              'ecs:Poll',
+              'ecs:RegisterContainerInstance',
+              'ecs:StartTelemetrySession',
+              'ecs:Submit*',
+              "ecr:GetAuthorizationToken",
+              "ecr:BatchCheckLayerAvailability",
+              "ecr:GetDownloadUrlForLayer",
+              "ecr:BatchGetImage",
+              'logs:CreateLogStream',
+              'logs:PutLogEvents'
+            ]
+            Resource: '*'
+
+  BastionEC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles: [!Ref 'BastionEC2Role']
+
+  BastionLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            /usr/bin/github-authorized-keys:
+              content: |
+                      #!/bin/sh
+                      set -ue
+                      API_URL="${API_URL:-http://github-authorized-keys:301/user/%s/authorized_keys}"
+                      if [ -n "$1" ]; then
+                        exec curl --silent --fail $(printf "$API_URL" "$1")
+                      else
+                        echo "Usage: $0 [github username]"
+                      fi
+              mode: '000550'
+              owner: root
+              group: root
+            /etc/ssh/cloudposse_sshd_config:
+              content: |
+                  Port 22
+                  AddressFamily any
+                  ListenAddress 0.0.0.0
+                  ListenAddress ::
+
+                  Protocol 2
+                  HostKey /etc/ssh/ssh_host_rsa_key
+
+                  # Lifetime and size of ephemeral version 1 server key
+                  #KeyRegenerationInterval 1h
+                  #ServerKeyBits 1024
+
+                  # Ciphers and keying
+                  #RekeyLimit default none
+
+                  # Logging
+                  # obsoletes QuietMode and FascistLogging
+                  #SyslogFacility AUTH
+                  #LogLevel INFO
+
+                  # Authentication:
+
+                  LoginGraceTime 2m
+                  PermitRootLogin yes
+                  PermitUserRC no
+                  StrictModes no
+                  MaxAuthTries 6
+                  MaxSessions 10
+
+                  PubkeyAuthentication yes
+
+                  # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+                  # but this is overridden so installations will only check .ssh/authorized_keys
+                  AuthorizedKeysFile  .ssh/authorized_keys
+
+                  #AuthorizedPrincipalsFile none
+
+                  # Don't read the user's ~/.rhosts and ~/.shosts files
+                  IgnoreRhosts yes
+
+                  # To disable tunneled clear text passwords, change to no here!
+                  #PasswordAuthentication yes
+                  PermitEmptyPasswords no
+
+                  # Change to no to disable s/key passwords
+                  ChallengeResponseAuthentication yes
+
+                  UsePAM yes
+                  AuthenticationMethods publickey,keyboard-interactive
+                  AllowAgentForwarding yes
+                  AllowTcpForwarding no
+                  GatewayPorts no
+                  X11Forwarding no
+                  PermitTTY yes
+                  PrintMotd no
+                  PrintLastLog yes
+                  TCPKeepAlive yes
+                  #UseLogin no
+                  UsePrivilegeSeparation sandbox
+                  PermitUserEnvironment no
+                  #Compression delayed
+                  ClientAliveInterval 30
+                  ClientAliveCountMax 3
+                  UseDNS no
+                  #PidFile /run/sshd.pid
+                  PermitTunnel yes
+                  ChrootDirectory none
+                  VersionAddendum none
+
+                  # no default banner path
+                  Banner none
+
+                  # override default of no subsystems
+                  Subsystem  sftp  /usr/lib/ssh/sftp-server -l VERBOSE
+
+                  # the following are HPN related configuration options
+                  # tcp receive buffer polling. disable in non autotuning kernels
+                  #TcpRcvBufPoll yes
+
+                  # disable hpn performance boosts
+                  #HPNDisabled no
+
+                  # buffer size for hpn to non-hpn connections
+                  #HPNBufferSize 2048
+
+                  ForceCommand /usr/bin/fc
+
+                  # Example of overriding settings on a per-user basis
+                  #Match User anoncvs
+                  #  X11Forwarding no
+                  #  AllowTcpForwarding no
+                  #  PermitTTY no
+                  #  ForceCommand cvs server
+
+                  AuthorizedKeysCommand /usr/bin/github-authorized-keys
+                  AuthorizedKeysCommandUser root
+    Properties:
+      ImageId: ami-0092e55c70015d8c3 # ECS AMI
+      InstanceType: t2.micro
+      IamInstanceProfile:
+        Ref: BastionEC2InstanceProfile
+      KeyName:
+        Ref: KeyPairName
+      SecurityGroups:
+        - !ImportValue
+          Fn::Sub: "${NetworkStackName}-BastionSecurityGroupID"
+      AssociatePublicIpAddress: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+
+          yum install -y aws-cfn-bootstrap
+
+          echo ECS_CLUSTER=${AWS::StackName} >> /etc/ecs/ecs.config
+
+          # Process the default configset from the CloudFormation::Init metadata
+          /opt/aws/bin/cfn-init -v \
+              --region ${AWS::Region} \
+              --stack ${AWS::StackName} \
+              --resource BastionLaunchConfiguration \
+              --configsets default
+
+          # Signal BastionAutoScalingGroup with the cfn-init exit status
+          /opt/aws/bin/cfn-signal -e $? \
+              --region ${AWS::Region} \
+              --stack ${AWS::StackName} \
+              --resource BastionAutoScalingGroup
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: 'github-authorized-keys'
+          MountPoints:
+            - SourceVolume: "host"
+              ContainerPath: "/host"
+          Image: "cloudposse/github-authorized-keys"
+          Cpu: "100"
+          Memory: "64"
+          Essential: "true"
+          Environment:
+            - Name: GITHUB_API_TOKEN
+              Value: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            - Name: GITHUB_ORGANIZATION
+              Value: xxxxxx
+            - Name: GITHUB_TEAM
+              Value: xxxxx
+            - Name: SYNC_USERS_SHELL
+              Value: /bin/bash
+            - Name: SYNC_USERS_ROOT
+              Value: /host
+            - Name: SYNC_USERS_INTERVAL
+              Value: 300
+            - Name: LISTEN
+              Value: :301
+            - Name: INTEGRATE_SSH
+              Value: 'false'
+            - Name: LINUX_USER_ADD_TPL
+              Value: 'adduser -s {shell} {username}'
+            - Name: LINUX_USER_ADD_WITH_GID_TPL
+              Value: 'adduser -s {shell} -G {group} {username}'
+          PortMappings:
+            - ContainerPort: 301
+              HostPort: 301
+              Protocol: tcp
+
+        - Name: 'bastion'
+          MountPoints:
+            - SourceVolume: "root"
+              ContainerPath: "/root"
+            - SourceVolume: "home"
+              ContainerPath: "/home"
+            - SourceVolume: "etc-shadow"
+              ContainerPath: "/etc/shadow"
+            - SourceVolume: "etc-passwd"
+              ContainerPath: "/etc/passwd"
+            - SourceVolume: "etc-group"
+              ContainerPath: "/etc/group"
+            - SourceVolume: "sshd_config"
+              ContainerPath: "/etc/ssh/sshd_config"
+            - SourceVolume: "usr-bin-github-authorized-keys"
+              ContainerPath: "/usr/bin/github-authorized-keys"
+          Image: "cloudposse/bastion"
+          Cpu: "100"
+          Memory: "128"
+          Essential: "true"
+          Links: 
+            - github-authorized-keys
+          Environment:
+            - Name: DUO_IKEY
+              Value: xxxxxxxxxxxxxxxxxxx
+            - Name: DUO_SKEY
+              Value: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            - Name: DUO_HOST
+              Value: api-xxxxx.duosecurity.com
+            - Name: SSH_AUDIT_ENABLED
+              Value: 'false'
+          PortMappings:
+            - ContainerPort: 22
+              HostPort: 1234
+              Protocol: tcp
+      Volumes:
+        - Name: "host"
+          Host:
+            SourcePath: "/"
+        - Name: "root"
+          Host:
+            SourcePath: "/root"
+        - Name: "home"
+          Host:
+            SourcePath: "/home"
+        - Name: "etc-shadow"
+          Host:
+            SourcePath: "/etc/shadow"
+        - Name: "etc-passwd"
+          Host:
+            SourcePath: "/etc/passwd"
+        - Name: "etc-group"
+          Host:
+            SourcePath: "/etc/group"
+        - Name: "sshd_config"
+          Host:
+            SourcePath: "/etc/ssh/cloudposse_sshd_config"
+        - Name: "usr-bin-github-authorized-keys"
+          Host:
+            SourcePath: "/usr/bin/github-authorized-keys"
+           
+
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Sub ${AWS::StackName}
+      DesiredCount: !Ref NumBastionHosts
+      TaskDefinition: !Ref TaskDefinition
+      DeploymentConfiguration:
+        MinimumHealthyPercent: 0
