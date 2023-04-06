@@ -18,9 +18,6 @@ github_repo: cloudposse/bastion
 
 # Badges to display
 badges:
-  - name: "Build Status"
-    image: "https://travis-ci.org/cloudposse/bastion.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/bastion"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/bastion.svg"
     url: "https://github.com/cloudposse/bastion/releases/latest"
