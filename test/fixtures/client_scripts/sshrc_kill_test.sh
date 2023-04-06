@@ -1,10 +1,10 @@
 #!/bin/sh
-ping -c 1 -w 5 bastion > /dev/null
+ping -c 1 -w 5 bastion
 
 # Add -vv for debugging.
 sshpass \
 	-P 'Verification code:' \
 	-f ./code \
-	ssh bastion@bastion \
+	ssh sshrc_exit_test@bastion \
 	-o StrictHostKeyChecking=no \
-	-- echo 'this is a test.'
+	-- echo 'this output should never print.'

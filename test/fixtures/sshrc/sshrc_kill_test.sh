@@ -1,3 +1,5 @@
 #!/bin/sh
 
-echo $USER
+if [ "$USER" == "sshrc_exit_test" ]; then
+  exit 1
+fi
