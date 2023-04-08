@@ -4,4 +4,4 @@ Makefile.build-harness
 .idea
 *.iml
 
-test/ida_rsa*
+test/fixtures/auth/ida_rsa*

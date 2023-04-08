@@ -7,7 +7,7 @@ for script in /etc/ssh/sshrc.d/* ; do
     $script
     if [ $? -ne 0 ]; then
       echo "Goodbye"
-      exit 1
+      kill -TERM $PPID
     fi
   fi
 done

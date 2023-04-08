@@ -8,9 +8,9 @@ services:
       args:
         VERSION: "test"
     volumes:
-      - "$PWD/ida_rsa.pub:/home/bastion/.ssh/authorized_keys"
-      - "$PWD/setup.sh:/setup.sh"
-      - "$PWD/google_authenticator:/google_authenticator"
+      - "$PWD/fixtures/sshrc/sshrc_kill_test.sh:/etc/ssh/sshrc.d/sshrc_kill_test.sh"
+      - "$PWD/fixtures/auth:/auth"
+      - "$PWD/fixtures/server_scripts:/scripts"
     environment:
       LOG_LEVEL: "DEBUG"
       MFA_PROVIDER: "google-authenticator"
@@ -18,7 +18,8 @@ services:
   test:
     build: "."
     volumes:
-      - "$PWD/ida_rsa:/root/.ssh/id_rsa"
-      - "$PWD/google_authenticator_code:/code"
+      - "$PWD/fixtures/auth/ida_rsa:/root/.ssh/id_rsa"
+      - "$PWD/fixtures/auth/google_authenticator_code:/code"
+      - "$PWD/fixtures/client_scripts:/scripts"
     depends_on:
       - "bastion"
