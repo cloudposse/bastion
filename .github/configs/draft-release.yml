@@ -1,0 +1,58 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
+version-template: '$MAJOR.$MINOR.$PATCH'
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+      - 'enhancement'
+      - 'hotfix'
+  default: 'minor'
+
+categories:
+  - title: '🚀 Enhancements'
+    labels:
+      - 'enhancement'
+      - 'patch'
+      - 'shell'
+      - 'scripts'
+      - 'terraform'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'hotfix'
+  - title: '🧰 Included Tools'
+    labels:
+      - 'packages'
+      - 'docker'
+  - title: '📚️ Documentation'
+    labels:
+      - 'docs'
+  - title: '🏗️ Build/Release Maintenance'
+    labels:
+      - 'github'
+
+autolabeler:
+  - label: 'hotfix'
+    branch:
+      - '/release\/.+/'
+
+change-template: |
+  <details>
+    <summary>$TITLE @$AUTHOR (#$NUMBER)</summary>
+    $BODY
+  </details>
+template: |
+  $CHANGES
+replacers:
+  # Remove irrelevant information from Renovate bot
+  - search: '/(?<=---\s+)^#.*(Renovate configuration|Configuration)(?:.|\n)*?This PR has been generated .*/gm'
+    replace: ''
+  # Remove Renovate bot banner image
+  - search: '/\[!\[[^\]]*Renovate\][^\]]*\](\([^)]*\))?\s*\n+/gm'
+    replace: ''
