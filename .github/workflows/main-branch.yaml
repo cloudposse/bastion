@@ -22,4 +22,4 @@ jobs:
   release:
     uses:  cloudposse/github-actions-workflows/.github/workflows/controller-draft-release.yml@main
     secrets:
-      github-private-actions-pat: "${{ secrets.PUBLIC_AND_PRIVATE_REPO_ACCESS_TOKEN_REPO }}"
+      github-private-actions-pat: "${{ secrets.REPO_ACCESS_TOKEN }}"
