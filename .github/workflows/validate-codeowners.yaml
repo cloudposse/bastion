@@ -14,4 +14,4 @@ jobs:
       with:
         checks: "syntax,owners,duppatterns"
         # GitHub access token is required only if the `owners` check is enabled
-        github_access_token: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+        github_access_token: "${{ secrets.REPO_ACCESS_TOKEN }}"
