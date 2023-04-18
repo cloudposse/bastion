@@ -1,62 +1,23 @@
-name: |-
-  Features branch (Pull request) workflow 
-  
-  Build and test Docker image
-
+name: Feature Branch
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ 'master' ]
     types: [opened, synchronize, reopened]
 
 permissions:
   pull-requests: write
+  deployments: write
   id-token: write
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  build:
-    name: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2.0.0
-        with:
-          aws-region: ${{ secrets.ecr-region }}
-          role-to-assume: ${{ secrets.ecr-iam-role }}
-
-      - name: Build
-        id: build
-        uses: cloudposse/github-action-docker-build-push@1.6.0
-        with:
-          organization: ${{ inputs.organization }}
-          repository: ${{ inputs.repository }}
-          registry: ${{ secrets.registry }}
-
-  test:
-    runs-on: ubuntu-latest
-    needs: [ build ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2.0.0
-        with:
-          aws-region: ${{ secrets.ecr-region }}
-          role-to-assume: ${{ secrets.ecr-iam-role }}
-
-      - name: Tests
-        id: test
-        uses: cloudposse/github-action-docker-compose-test-run@0.1.2
-        with:
-          file: test/docker-compose.yml
-          service: app
-          command: test/test.sh
-          registry: ${{ secrets.registry }}
+  ci:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-dockerized-app-build.yml@main
+    with:
+      organization: "${{ github.event.repository.owner.login }}"
+      repository: "${{ github.event.repository.name }}"
+    secrets:
+      ecr-region: "${{ secrets.ECR_REGION }}"
+      ecr-iam-role: "${{ secrets.ECR_IAM_ROLE }}"
+      registry: "${{ secrets.ECR_REGISTRY }}"
+      secret-outputs-passphrase: "${{ secrets.GHA_SECRET_OUTPUT_PASSPHRASE }}"
