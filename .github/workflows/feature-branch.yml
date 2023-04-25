@@ -20,7 +20,6 @@ jobs:
         uses: cloudposse/github-action-docker-build-push@1.10.0
         with:
           image_name: ${{ github.repository }}
-          registry: hub.docker.com
           login: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
