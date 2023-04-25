@@ -1,25 +1,38 @@
 name: Main Branch
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 permissions:
   contents: write
   id-token: write
 
 jobs:
-  ci:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-dockerized-app-build.yml@main
+  ci-readme:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
     with:
-      organization: "${{ github.event.repository.owner.login }}"
-      repository: "${{ github.event.repository.name }}"
-    secrets:
-      ecr-region: "${{ secrets.ECR_REGION }}"
-      ecr-iam-role: "${{ secrets.ECR_IAM_ROLE }}"
-      registry: "${{ secrets.ECR_REGISTRY }}"
-      secret-outputs-passphrase: "${{ secrets.GHA_SECRET_OUTPUT_PASSPHRASE }}"
+      filter-mode: nofilter
+      suggestions: false
 
-  release:
-    uses:  cloudposse/github-actions-workflows/.github/workflows/controller-draft-release.yml@main
+  ci-codeowners:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    with:
+      is_fork: false
     secrets:
-      github-private-actions-pat: "${{ secrets.REPO_ACCESS_TOKEN }}"
+      github_access_token: ${{ secrets.github_access_token }}
+
+  controller-release:
+    uses: cloudposse/github-actions-workflows/.github/workflows/controller-release.yml@releases
+    needs: [ ci-readme, ci-codeowners ]
+
+  controller-promote:
+    uses: cloudposse/github-action-docker-promote@0.1.1
+    with:
+      registry: hub.docker.com
+      login: ${{ secrets.DOCKERHUB_USERNAME }}
+      password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      repository: ${{ github.repository }}
+      from: sha-${{ github.sha }}
+      to: test
+      use_metadata: false
+    needs: [ controller-release ]

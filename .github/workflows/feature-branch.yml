@@ -1,23 +1,81 @@
 name: Feature Branch
 on:
   pull_request:
-    branches: [ 'master' ]
-    types: [opened, synchronize, reopened]
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
 
 permissions:
-  pull-requests: write
-  deployments: write
   id-token: write
   contents: read
 
 jobs:
-  ci:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-dockerized-app-build.yml@main
+  ci-docker-build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        id: build
+        uses: cloudposse/github-action-docker-build-push@1.10.0
+        with:
+          image_name: ${{ github.repository }}
+          registry: hub.docker.com
+          login: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - uses: cloudposse/github-action-secret-outputs@0.1.0
+        id: image
+        with:
+          secret: ${{ secrets.secret-outputs-passphrase }}
+          op: encode
+          in: ${{ steps.build.outputs.image }}
+
+    outputs:
+      image: ${{ steps.image.outputs.out }}
+      tag: ${{ steps.build.outputs.tag }}
+
+  ci-docker-test:
+    runs-on: ubuntu-latest
+    needs: [ ci-docker-build ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: KengoTODA/actions-setup-docker-compose@main
+
+      - name: Run Tests
+        shell: bash
+        run: |
+          cd test
+          ./test.sh
+
+      - name: Cleanup
+        if: always()
+        shell: bash
+        run: |
+          cd test
+          docker-compose -f down
+
+  ci-readme:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
     with:
-      organization: "${{ github.event.repository.owner.login }}"
-      repository: "${{ github.event.repository.name }}"
+      filter-mode: nofilter
+      suggestions: false
+
+  ci-codeowners:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    with:
+      is_fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
     secrets:
-      ecr-region: "${{ secrets.ECR_REGION }}"
-      ecr-iam-role: "${{ secrets.ECR_IAM_ROLE }}"
-      registry: "${{ secrets.ECR_REGISTRY }}"
-      secret-outputs-passphrase: "${{ secrets.GHA_SECRET_OUTPUT_PASSPHRASE }}"
+      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  ci:
+    runs-on: ${{ fromJSON(inputs.runs-on) }}
+    if: ${{ always() }}
+    steps:
+      - run: |
+          echo '${{ toJSON(needs) }}'  # easier debug
+          ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
+    needs: [ ci-docker-build, ci-docker-test, ci-readme, ci-codeowners ]
