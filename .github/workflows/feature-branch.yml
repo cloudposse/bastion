@@ -9,9 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  ci-test:
+  ci-build-test:
     runs-on: ubuntu-latest
-    needs: [ ci-docker-build ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -30,26 +29,6 @@ jobs:
         run: |
           cd test
           docker-compose -f down  
-
-  ci-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ github.repository }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
 
   ci-readme:
     uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
@@ -71,4 +50,4 @@ jobs:
       - run: |
           echo '${{ toJSON(needs) }}'  # easier debug
           ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
-    needs: [ ci-docker-build, ci-docker-test, ci-readme, ci-codeowners ]
+    needs: [ ci-build-test, ci-readme, ci-codeowners ]
