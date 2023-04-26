@@ -9,32 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  ci-docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Build
-        id: build
-        uses: cloudposse/github-action-docker-build-push@1.10.0
-        with:
-          image_name: ${{ github.repository }}
-          login: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - uses: cloudposse/github-action-secret-outputs@0.1.0
-        id: image
-        with:
-          secret: ${{ secrets.secret-outputs-passphrase }}
-          op: encode
-          in: ${{ steps.build.outputs.image }}
-
-    outputs:
-      image: ${{ steps.image.outputs.out }}
-      tag: ${{ steps.build.outputs.tag }}
-
-  ci-docker-test:
+  ci-test:
     runs-on: ubuntu-latest
     needs: [ ci-docker-build ]
     steps:
@@ -54,7 +29,27 @@ jobs:
         shell: bash
         run: |
           cd test
-          docker-compose -f down
+          docker-compose -f down  
+
+  ci-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: my-docker-hub-namespace/my-docker-hub-repository
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   ci-readme:
     uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
