@@ -50,5 +50,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   controller-release:
-    uses: cloudposse/github-actions-workflows/.github/workflows/controller-release.yml@releases
+    uses: cloudposse/github-actions-workflows/.github/workflows/controller-release.yml@main
     needs: [ ci-build-push ]
