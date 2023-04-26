@@ -8,22 +8,22 @@ permissions:
   id-token: write
 
 jobs:
-#  ci-readme:
-#    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
-#    with:
-#      filter-mode: nofilter
-#      suggestions: false
-#
-#  ci-codeowners:
-#    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
-#    with:
-#      is_fork: false
-#    secrets:
-#      github_access_token: ${{ secrets.github_access_token }}
+  ci-readme:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
+    with:
+      filter-mode: nofilter
+      suggestions: false
+
+  ci-codeowners:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    with:
+      is_fork: false
+    secrets:
+      github_access_token: ${{ secrets.github_access_token }}
 
   ci-build-push:
     runs-on: ubuntu-latest
-#    needs: [ ci-readme, ci-codeowners ]
+    needs: [ ci-readme, ci-codeowners ]
     steps:
       -
         name: Checkout
