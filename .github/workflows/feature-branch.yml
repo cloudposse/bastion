@@ -22,16 +22,12 @@ jobs:
 
       - name: Run Tests
         shell: bash
-        run: |
-          cd test
-          ./test.sh
+        run: cd test && ./test.sh
 
       - name: Cleanup
         if: always()
         shell: bash
-        run: |
-          cd test
-          docker-compose -f down  
+        run: cd test && docker-compose down
 
   ci-readme:
     uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
