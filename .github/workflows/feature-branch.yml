@@ -1,0 +1,52 @@
+name: feature-branch
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  pull-requests: write
+  id-token: write
+  contents: read
+
+jobs:
+  ci-readme:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
+    with:
+      filter-mode: nofilter
+      suggestions: false
+
+  ci-codeowners:
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    with:
+      is_fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+    secrets:
+      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  ci-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: KengoTODA/actions-setup-docker-compose@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Tests
+        shell: bash
+        run: cd test && ./test.sh
+
+      - name: Cleanup
+        if: always()
+        shell: bash
+        run: cd test && docker-compose down
+
+  ci:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - run: |
+          echo '${{ toJSON(needs) }}'  # easier debug
+          ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
+    needs: [ ci-readme, ci-codeowners, ci-build-test ]
