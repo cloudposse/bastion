@@ -19,7 +19,7 @@ jobs:
     with:
       is_fork: false
     secrets:
-      github_access_token: ${{ secrets.github_access_token }}
+      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
   ci-build-push:
     runs-on: ubuntu-latest
