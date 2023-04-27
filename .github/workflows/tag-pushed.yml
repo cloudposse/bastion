@@ -11,17 +11,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Check if tag belongs to the latest major release or is higher
         id: check_tag
         run: |
-          highest_tag="$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)"
+          highest_tag=$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)
           highest_major=$(echo $highest_tag | cut -d '.' -f 1)
           
           echo $highest_tag
           echo $highest_major
           
-          current_tag="${{ github.ref_name }}"
+          current_tag=${{ github.ref_name }}
           current_major=$(echo $current_tag | cut -d '.' -f 1)
 
           echo $current_tag
