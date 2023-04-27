@@ -1,8 +1,10 @@
 name: feature-branch
 on:
   pull_request:
-    branches: [ main ]
-    types: [ opened, synchronize, reopened ]
+    branches:
+      - main
+      - release/**
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   pull-requests: write
