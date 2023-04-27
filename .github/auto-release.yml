@@ -18,6 +18,7 @@ version-resolver:
     - 'bug'
     - 'hotfix'
   default: 'minor'
+filter-by-commitish: true
 
 categories:
 - title: '🚀 Enhancements'

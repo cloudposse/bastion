@@ -11,15 +11,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check if tag belongs to the latest major release or is higher
+        id: check_tag
+        run: |
+          highest_tag=$(git tag -l | grep -E "^[0-9]+\.[0-9]+\.[0-9]+$" | sort -rV | head -n1)
+          highest_major=$(echo $highest_tag | cut -d '.' -f 1)          
+          test -n "$highest_major"
+          
+          current_tag=${{ github.ref_name }}
+          current_major=$(echo $current_tag | cut -d '.' -f 1)
+          test -n "$current_major"
+          
+          if [ $current_major -ge $highest_major ]; then
+            echo "is_latest_major=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_latest_major=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ github.repository }}
+          flavor: |
+            latest=false
           tags: |
-            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ steps.check_tag.outputs.is_latest_major }}
+            type=semver,pattern={{major}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{version}}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
