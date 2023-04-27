@@ -17,9 +17,8 @@ jobs:
       - name: Check if tag belongs to the latest major release or is higher
         id: check_tag
         run: |
-          grep --help
           git tag -l
-          git tag -l | grep -E "^\d+\.\d+\.\d+$" || true
+          git tag -l | grep -E "^[0-9]+\.[0-9]+\.[0-9]+$"
           highest_tag=$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)
           highest_major=$(echo $highest_tag | cut -d '.' -f 1)
           
