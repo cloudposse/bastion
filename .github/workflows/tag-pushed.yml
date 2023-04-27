@@ -19,7 +19,7 @@ jobs:
         run: |
           grep --help
           git tag -l
-          git tag -l | grep -E "^\d+\.\d+\.\d+$"
+          git tag -l | grep -E "^\d+\.\d+\.\d+$" || true
           highest_tag=$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)
           highest_major=$(echo $highest_tag | cut -d '.' -f 1)
           
