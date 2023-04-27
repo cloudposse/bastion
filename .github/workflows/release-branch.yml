@@ -1,7 +1,14 @@
 name: release-branch
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - release/**
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
 
 permissions:
   contents: write
