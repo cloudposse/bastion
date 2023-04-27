@@ -25,7 +25,7 @@ PermitRootLogin yes
 PermitUserRC no
 StrictModes no
 MaxAuthTries 6
-MaxSessions 10
+MaxSessions 1
 
 PubkeyAuthentication yes
 
