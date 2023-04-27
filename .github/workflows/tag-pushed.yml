@@ -21,9 +21,9 @@ jobs:
           current_major=$(echo "$current_tag" | cut -d '.' -f 1)
           
           if [ $current_major -ge $highest_major ]; then
-            echo "::set-output name=is_latest_major::true"
+            echo "is_latest_major=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=is_latest_major::false"
+            echo "is_latest_major=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Docker meta
