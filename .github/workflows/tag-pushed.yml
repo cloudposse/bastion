@@ -17,7 +17,7 @@ jobs:
         run: |
           highest_tag=$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)
           highest_major=$(echo "$highest_tag" | cut -d '.' -f 1)
-          current_tag="${{ github.ref }}"
+          current_tag="${{ github.ref_name }}"
           current_major=$(echo "$current_tag" | cut -d '.' -f 1)
           
           if [ $current_major -ge $highest_major ]; then
