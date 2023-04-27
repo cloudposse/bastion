@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Check if tag belongs to the latest major release or higher
+      - name: Check if tag belongs to the latest major release or is higher
         id: check_tag
         run: |
           highest_tag=$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)
