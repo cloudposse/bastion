@@ -24,6 +24,7 @@ jobs:
       github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
   ci-labels:
+    runs-on: ubuntu-latest
     steps:
       - uses: cloudposse/github-action-release-label-validator@v1
 
