@@ -31,6 +31,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ github.repository }}
+          flavor: |
+            latest=false
           tags: |
             type=raw,value=latest,enable=${{ steps.check_tag.outputs.is_latest_major }}
             type=semver,pattern={{major}}
