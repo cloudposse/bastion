@@ -3,7 +3,7 @@ name: tag-pushed
 on:
   push:
     tags:
-      - 'v*'
+      - '\d+\.\d+\.\d+'
 
 jobs:
   ci-build-push:
