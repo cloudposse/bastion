@@ -17,13 +17,13 @@ jobs:
         shell: bash
         run: |
           set -x
-          highest_tag=$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)
+          highest_tag="$(git tag -l | grep -E "^\d+\.\d+\.\d+$" | sort -rV | head -n1)"
           highest_major=$(echo $highest_tag | cut -d '.' -f 1)
           
           echo $highest_tag
           echo $highest_major
           
-          current_tag=${{ github.ref_name }}
+          current_tag="${{ github.ref_name }}"
           current_major=$(echo $current_tag | cut -d '.' -f 1)
 
           echo $current_tag
