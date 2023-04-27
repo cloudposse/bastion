@@ -32,7 +32,6 @@ jobs:
         with:
           images: ${{ github.repository }}
           tags: |
-            # set latest tag for default branch
             type=raw,value=latest,enable=${{ steps.check_tag.outputs.is_latest_major }}
             type=semver,pattern={{major}}
             type=semver,pattern={{major}}.{{minor}}
