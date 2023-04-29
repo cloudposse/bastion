@@ -7,6 +7,9 @@ red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`
 
+docker -v
+docker-compose -v
+
 # Generating temp keys
 rm -rf fixtures/auth/ida_rsa*
 ssh-keygen -q -f fixtures/auth/ida_rsa -N ""
