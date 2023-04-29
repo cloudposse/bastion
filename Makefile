@@ -30,8 +30,8 @@ run: reset
 			$(DOCKER_IMAGE_NAME)
 
 buildtest:
-	pushd test > /dev/null; ./build.sh; popd > /dev/null
+	cd test > /dev/null; ./build.sh
 
 
 test:
-	pushd test > /dev/null; ./test.sh; popd > /dev/null
+	cd test > /dev/null; ./test.sh

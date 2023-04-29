@@ -27,10 +27,9 @@ else
 fi
 
 
-docker-compose exec bastion ls /var/log/sudo-io/00/00/01/
+docker compose exec bastion ls /var/log/sudo-io/00/00/01/
 
 retVal=$?
-
 if [ $retVal -ne 0 ]; then
   echo "${red}* sudosh Audit Failed - no logs created!${reset}"
   exit $retVal
@@ -39,7 +38,7 @@ else
 fi
 
 
-docker-compose exec bastion curl https://hooks.slack.com
+docker compose exec bastion curl https://hooks.slack.com
 
 retVal=$?
 
@@ -50,7 +49,7 @@ else
   echo "${green}* Slack API Connection Test Succeeded${reset}"
 fi
 
-export SSHRC_KILL_OUTPUT=`docker-compose run --build test /scripts/sshrc_kill_test.sh`
+export SSHRC_KILL_OUTPUT=`docker compose run --build test /scripts/sshrc_kill_test.sh`
 
 if [[ "$SSHRC_KILL_OUTPUT" == *"this output should never print"* ]]; then
   echo "${red}* Failure to quit after non-zero exit code in sshrc${reset}"
