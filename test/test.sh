@@ -7,18 +7,15 @@ red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`
 
-docker -v
-docker-compose -v
-
 # Generating temp keys
 rm -rf fixtures/auth/ida_rsa*
 ssh-keygen -q -f fixtures/auth/ida_rsa -N ""
 chmod 600 fixtures/auth/ida_rsa
 
-docker-compose down
-docker-compose up -d --build bastion
-docker-compose exec bastion /scripts/setup.sh
-docker-compose run --build test /scripts/google_auth_test.sh
+docker compose down
+docker compose up -d --build bastion
+docker compose exec bastion /scripts/setup.sh
+docker compose run --build test /scripts/google_auth_test.sh
 
 retVal=$?
 
