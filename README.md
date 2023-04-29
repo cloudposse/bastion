@@ -1,6 +1,6 @@
 
 <!-- markdownlint-disable -->
-# bastion [![Latest Release](https://img.shields.io/github/release/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# bastion [![Latest Release](https://img.shields.io/github/release/cloudposse/bastion.svg)](https://github.com/cloudposse/bastion/releases/latest) [![Build & Test Status](https://github.com/cloudposse/bastion/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/cloudposse/bastion/actions/workflows/integration-tests.yml) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
 
 [![README Header][readme_header_img]][readme_header_link]
