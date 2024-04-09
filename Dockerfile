@@ -81,7 +81,7 @@ LABEL maintainer="erik@cloudposse.com"
 USER root
 
 ## Install dependencies
-RUN apk --update add curl drill groff util-linux bash xauth gettext openssl-dev shadow linux-pam sudo && \
+RUN apk --update add curl drill groff util-linux bash xauth gettext openssl-dev shadow linux-pam libqrencode sudo && \
     rm -rf /etc/ssh/ssh_host_*_key* && \
     rm -f /usr/bin/ssh-agent && \
     rm -f /usr/bin/ssh-keyscan && \
