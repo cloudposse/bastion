@@ -35,7 +35,7 @@ RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://g
 RUN cd src && \
     ./bootstrap.sh && \
     ./configure \
-        --prefix=/dist && \
+        --prefix=/usr && \
     make && \
     make install
 
@@ -64,7 +64,7 @@ RUN cd src && \
         --with-privsep-user=sshd \
         --with-ssl-engine \
         --disable-wtmp \
-        --with-pam=/dist/lib64/security && \
+        --with-pam=/usr/lib64/security && \
     make && \
     make install
 
@@ -95,7 +95,7 @@ RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION
 COPY --from=duo-builder dist/ /
 
 ## Install Google Authenticator PAM module
-COPY --from=google-authenticator-libpam-builder dist/ /
+COPY --from=google-authenticator-libpam-builder /usr /usr
 
 ## Install OpenSSH Portable
 COPY --from=openssh-portable-builder dist/ /
