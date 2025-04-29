@@ -13,8 +13,14 @@ chmod 600 fixtures/auth/ida_rsa
 
 docker compose down
 docker compose up -d --build bastion
+
+# wait until bastion is up
+until docker compose exec bastion ps aux|grep -v grep| grep sshd > /dev/null; do echo "Waiting for bastion to come online..."; sleep 1; done
+
+echo "Bastion sshd service started."
+
 docker compose exec bastion /scripts/setup.sh
-docker compose run --build test /scripts/google_auth_test.sh
+docker compose run --remove-orphans --build test /scripts/google_auth_test.sh
 
 retVal=$?
 
@@ -48,7 +54,7 @@ else
   echo "${green}* Slack API Connection Test Succeeded${reset}"
 fi
 
-export SSHRC_KILL_OUTPUT=`docker compose run --build test /scripts/sshrc_kill_test.sh`
+export SSHRC_KILL_OUTPUT=`docker compose run --remove-orphans --build test /scripts/sshrc_kill_test.sh`
 
 if [[ "$SSHRC_KILL_OUTPUT" == *"this output should never print"* ]]; then
   echo "${red}* Failure to quit after non-zero exit code in sshrc${reset}"
