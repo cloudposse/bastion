@@ -19,9 +19,8 @@ jobs:
   ci-codeowners:
     uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
     with:
-      is_fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
-    secrets:
-      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      is_fork: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+    secrets: inherit
 
   ci-labels:
     runs-on: ubuntu-latest
