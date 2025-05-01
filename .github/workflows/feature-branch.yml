@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   ci-readme:
-    uses: cloudposse/.github/.github/workflows/shared-readme.yml@main
+    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
     secrets: inherit    
 
   ci-codeowners:
