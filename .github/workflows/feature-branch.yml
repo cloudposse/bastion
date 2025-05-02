@@ -14,6 +14,7 @@ permissions:
 jobs:
   ci-readme:
     uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
+    if: ${{ github.event_name == 'push' }}
     secrets: inherit    
 
   ci-codeowners:
