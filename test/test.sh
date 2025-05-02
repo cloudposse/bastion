@@ -14,6 +14,7 @@ chmod 600 fixtures/auth/ida_rsa
 docker compose down
 docker compose up -d --build bastion
 docker compose exec bastion /scripts/setup.sh
+sleep 1
 docker compose run test /scripts/google_auth_test.sh
 
 retVal=$?
