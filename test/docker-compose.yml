@@ -14,6 +14,11 @@ services:
     environment:
       LOG_LEVEL: "DEBUG"
       MFA_PROVIDER: "google-authenticator"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "22"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   test:
     build: "."
