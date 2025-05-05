@@ -22,3 +22,5 @@ chmod 600 /home/sshrc_exit_test/.google_authenticator
 mkdir /home/sshrc_exit_test/.ssh
 cp /auth/ida_rsa.pub /home/sshrc_exit_test/.ssh/authorized_keys
 chown -R sshrc_exit_test: /home/sshrc_exit_test
+
+echo "Setup complete"
