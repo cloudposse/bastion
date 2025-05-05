@@ -1,17 +1,18 @@
+FROM alpine:3.21 AS base
+
 ##
 ## Base builder image
 ##
-FROM alpine:3.17 as builder
+FROM base AS builder
 
 RUN apk --update add --virtual .build-deps build-base automake autoconf libtool git linux-pam-dev zlib-dev openssl-dev wget
-
 
 ##
 ## Duo builder image
 ##
-FROM builder as duo-builder
+FROM builder AS duo-builder
 
-ARG DUO_VERSION=2.0.0
+ARG DUO_VERSION=2.0.4
 RUN wget https://dl.duosecurity.com/duo_unix-${DUO_VERSION}.tar.gz && \
     mkdir -p src && \
     tar -zxf duo_unix-${DUO_VERSION}.tar.gz --strip-components=1 -C src
@@ -23,29 +24,27 @@ RUN cd src && \
     make && \
     make install
 
-
 ##
 ## Google Authenticator PAM module builder image
 ##
-FROM builder as google-authenticator-libpam-builder
+FROM builder AS google-authenticator-libpam-builder
 
-ARG AUTHENTICATOR_LIBPAM_VERSION=1.09
+ARG AUTHENTICATOR_LIBPAM_VERSION=1.11
 RUN git clone --branch ${AUTHENTICATOR_LIBPAM_VERSION} --single-branch https://github.com/google/google-authenticator-libpam src
 
 RUN cd src && \
     ./bootstrap.sh && \
     ./configure \
-        --prefix=/dist && \
+        --prefix=/usr && \
     make && \
     make install
-
 
 ##
 ## OpenSSH Portable builder image
 ##
-FROM builder as openssh-portable-builder
+FROM builder AS openssh-portable-builder
 
-ARG OPENSSH_VERSION=V_9_3_P1
+ARG OPENSSH_VERSION=V_9_9_P2
 RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable src
 
 COPY patches/ /patches/
@@ -57,24 +56,22 @@ RUN cd src && \
         --prefix=/dist/usr \
         --sysconfdir=/etc/ssh \
         --datadir=/dist/usr/share/openssh \
-        --libexecdir=/dist/usr/lib/ssh \
+        --libexecdir=/usr/lib/ssh \
         --mandir=/dist/usr/share/man \
         --with-pid-dir=/run \
         --with-mantype=man \
         --with-privsep-path=/var/empty \
         --with-privsep-user=sshd \
-        --with-md5-passwords \
         --with-ssl-engine \
         --disable-wtmp \
-        --with-pam=/dist/lib64/security && \
+        --with-pam=/usr/lib64/security && \
     make && \
     make install
-
 
 ##
 ## Bastion image
 ##
-FROM alpine:3.17
+FROM base
 
 LABEL maintainer="erik@cloudposse.com"
 
@@ -98,10 +95,12 @@ RUN wget https://github.com/cloudposse/sudosh/releases/download/${SUDOSH_VERSION
 COPY --from=duo-builder dist/ /
 
 ## Install Google Authenticator PAM module
-COPY --from=google-authenticator-libpam-builder dist/ /
+COPY --from=google-authenticator-libpam-builder /usr /usr
 
 ## Install OpenSSH Portable
 COPY --from=openssh-portable-builder dist/ /
+COPY --from=openssh-portable-builder /usr/lib/ssh /usr/lib/ssh
+
 
 ## System
 ENV TIMEZONE="Etc/UTC" \
@@ -128,7 +127,7 @@ ENV ENFORCER_ENABLED="true" \
 ## Enable Rate Limiting
 ENV RATE_LIMIT_ENABLED="true"
 
-## Tolerate 5 consecutive fairues
+## Tolerate 5 consecutive failures
 ENV RATE_LIMIT_MAX_FAILURES="5"
 ## Lock accounts out for 300 seconds (5 minutes) after repeated failures
 ENV RATE_LIMIT_LOCKOUT_TIME="300"

@@ -1,7 +1,4 @@
-version: "3.5"
-
 services:
-
   bastion:
     build:
       context: ".."
