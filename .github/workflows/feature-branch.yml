@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: cloudposse/github-action-release-label-validator@v1
 
-  ci-build-test:
+  ci-integration-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,7 +40,7 @@ jobs:
 
       - name: Run Tests
         shell: bash
-        run: cd test && ./test.sh
+        run: make test
 
       - name: Cleanup
         if: always()
