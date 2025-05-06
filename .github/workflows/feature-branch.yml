@@ -45,7 +45,7 @@ jobs:
       - name: Cleanup
         if: always()
         shell: bash
-        run: cd test && docker-compose down
+        run: make cleantest
 
   ci:
     runs-on: ubuntu-latest
