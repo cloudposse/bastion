@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: cloudposse/github-action-release-label-validator@v1
 
-  ci-integration-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,4 +54,4 @@ jobs:
       - run: |
           echo '${{ toJSON(needs) }}'  # easier debug
           ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
-    needs: [ ci-readme, ci-codeowners, ci-labels, ci-build-test ]
+    needs: [ ci-readme, ci-codeowners, ci-labels, test ]
