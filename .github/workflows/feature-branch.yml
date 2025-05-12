@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   ci-readme:
-    uses: cloudposse/.github/.github/workflows//shared-readme.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-readme.yml@main
     if: ${{ github.event_name == 'push' }}
     secrets: inherit    
 
