@@ -5,9 +5,9 @@ services:
       args:
         VERSION: "test"
     volumes:
-      - "$PWD/fixtures/sshrc/sshrc_kill_test.sh:/etc/ssh/sshrc.d/sshrc_kill_test.sh"
-      - "$PWD/fixtures/auth:/auth"
-      - "$PWD/fixtures/server_scripts:/scripts"
+      - "./fixtures/sshrc/sshrc_kill_test.sh:/etc/ssh/sshrc.d/sshrc_kill_test.sh"
+      - "./fixtures/auth:/auth"
+      - "./fixtures/server_scripts:/scripts"
     environment:
       LOG_LEVEL: "DEBUG"
       MFA_PROVIDER: "google-authenticator"
@@ -20,8 +20,8 @@ services:
   test:
     build: "."
     volumes:
-      - "$PWD/fixtures/auth/ida_rsa:/root/.ssh/id_rsa"
-      - "$PWD/fixtures/auth/google_authenticator_code:/code"
-      - "$PWD/fixtures/client_scripts:/scripts"
+      - "./fixtures/auth/ida_rsa:/root/.ssh/id_rsa"
+      - "./fixtures/auth/google_authenticator_code:/code"
+      - "./fixtures/client_scripts:/scripts"
     depends_on:
       - "bastion"
