@@ -16,20 +16,27 @@ permissions:
 
 jobs:
   ci-readme:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-readme.yml@main
+    name: "Readme"
+    if: ${{ github.event_name == 'push' }}
     with:
-      filter-mode: nofilter
-      suggestions: false
+      runs-on: ${{ inputs.runs-on }}
+    secrets: inherit
 
   ci-codeowners:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-codeowners.yml@main
+    name: "CI"
     with:
-      is_fork: false
-    secrets:
-      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      is_fork: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+      runs-on: ${{ inputs.runs-on }}
+    secrets: inherit
 
-  controller-release:
-    uses: cloudposse/github-actions-workflows/.github/workflows/controller-release.yml@main
-    needs: [ ci-readme, ci-codeowners ]
-    secrets:
-      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}  # Required to trigger tag workflow
+  auto-release:
+    name: "Release"
+    needs: [ci-readme, ci-codeowners]
+    uses: cloudposse/.github/.github/workflows/shared-auto-release.yml@main
+    if: ${{ github.event_name == 'push' }}
+    with:
+      runs-on: ${{ inputs.runs-on }}
+      publish: true
+    secrets: inherit
