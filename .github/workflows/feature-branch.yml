@@ -13,24 +13,22 @@ permissions:
 
 jobs:
   ci-readme:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
-    with:
-      filter-mode: nofilter
-      suggestions: false
+    uses: cloudposse/.github/.github/workflows/shared-readme.yml@main
+    if: ${{ github.event_name == 'push' }}
+    secrets: inherit    
 
   ci-codeowners:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-codeowners.yml@main
     with:
-      is_fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
-    secrets:
-      github_access_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      is_fork: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+    secrets: inherit
 
   ci-labels:
     runs-on: ubuntu-latest
     steps:
       - uses: cloudposse/github-action-release-label-validator@v1
 
-  ci-build-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,12 +40,12 @@ jobs:
 
       - name: Run Tests
         shell: bash
-        run: cd test && ./test.sh
+        run: make test
 
       - name: Cleanup
         if: always()
         shell: bash
-        run: cd test && docker-compose down
+        run: make cleantest
 
   ci:
     runs-on: ubuntu-latest
@@ -55,5 +53,5 @@ jobs:
     steps:
       - run: |
           echo '${{ toJSON(needs) }}'  # easier debug
-          ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
-    needs: [ ci-readme, ci-codeowners, ci-labels, ci-build-test ]
+          ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+    needs: [ ci-readme, ci-codeowners, ci-labels, test ]

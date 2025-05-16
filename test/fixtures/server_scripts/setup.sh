@@ -3,6 +3,10 @@
 # This script runs on the test bastion server to initialize and setup the test environment.
 syslogd
 
+# Setup expect for google auth test
+apk update
+apk add expect
+
 rm -rf /var/log/sudo-io
 
 useradd -m bastion
@@ -22,3 +26,5 @@ chmod 600 /home/sshrc_exit_test/.google_authenticator
 mkdir /home/sshrc_exit_test/.ssh
 cp /auth/ida_rsa.pub /home/sshrc_exit_test/.ssh/authorized_keys
 chown -R sshrc_exit_test: /home/sshrc_exit_test
+
+echo "Setup complete"
