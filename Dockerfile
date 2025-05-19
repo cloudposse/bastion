@@ -24,6 +24,7 @@ RUN cd src && \
     make && \
     make install
 
+
 ##
 ## Google Authenticator PAM module builder image
 ##
