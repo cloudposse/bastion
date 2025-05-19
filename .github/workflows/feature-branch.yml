@@ -1,11 +1,20 @@
-name: feature-branch
+name: Branch
 on:
   pull_request:
     branches:
       - main
       - release/**
     types: [opened, synchronize, reopened, labeled, unlabeled]
-
+  push:
+    branches:
+      - main
+      - release/**
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
+      
 permissions:
   pull-requests: write
   id-token: write
@@ -55,3 +64,32 @@ jobs:
           echo '${{ toJSON(needs) }}'  # easier debug
           ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
     needs: [ ci-readme, ci-codeowners, ci-labels, test ]
+
+  ci-build-push:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    needs: [ ci ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build
+        id: build
+        uses: cloudposse/github-action-docker-build-push@main
+        with:
+          registry: registry.hub.docker.com
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ secrets.DOCKERHUB_USERNAME }}"
+          password: "${{ secrets.DOCKERHUB_PASSWORD }}"
+
+  auto-release:
+    name: "Release"
+    needs: [ci, ci-build-push]
+    uses: cloudposse/.github/.github/workflows/shared-auto-release.yml@main
+    if: ${{ github.event_name == 'push' }}
+    with:
+      publish: true
+    secrets: inherit
