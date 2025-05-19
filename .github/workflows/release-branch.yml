@@ -28,9 +28,27 @@ jobs:
       is_fork: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
     secrets: inherit
 
+  ci-build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build
+        id: build
+        uses: cloudposse/github-action-docker-build-push@main
+        with:
+          registry: registry.hub.docker.com
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ secrets.DOCKERHUB_USERNAME }}"
+          password: "${{ secrets.DOCKERHUB_PASSWORD }}"
+
   auto-release:
     name: "Release"
-    needs: [ci-readme, ci-codeowners]
+    needs: [ci-readme, ci-codeowners, ci-build-push]
     uses: cloudposse/.github/.github/workflows/shared-auto-release.yml@main
     if: ${{ github.event_name == 'push' }}
     with:
