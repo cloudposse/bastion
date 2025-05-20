@@ -19,7 +19,8 @@ permissions:
   pull-requests: write
   id-token: write
   contents: read
-
+  packages: write
+  
 jobs:
   ci-readme:
     uses: cloudposse/.github/.github/workflows/shared-readme.yml@main
