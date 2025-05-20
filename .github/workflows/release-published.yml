@@ -32,3 +32,13 @@ jobs:
           repository: "${{ github.event.repository.name }}"
           login: "${{ secrets.DOCKERHUB_USERNAME }}"
           password: "${{ secrets.DOCKERHUB_PASSWORD }}"
+
+      - name: Build GHR
+        id: build-ghr
+        uses: cloudposse/github-action-docker-build-push@main
+        with:
+          registry: ghcr.io
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ github.actor }}"
+          password: "${{ secrets.GITHUB_TOKEN }}"
