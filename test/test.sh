@@ -37,6 +37,7 @@ fi
 
 docker compose run --remove-orphans test /scripts/google_auth_test.sh
 
+docker ps 
 docker logs bastion
 
 retVal=$?
