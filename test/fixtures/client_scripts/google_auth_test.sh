@@ -9,4 +9,3 @@ sshpass \
 	-o StrictHostKeyChecking=no \
 	-- echo 'this is a test.'
 
-echo $?
