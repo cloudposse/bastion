@@ -22,6 +22,7 @@ echo "Bastion sshd service started."
 
 docker compose exec bastion /scripts/setup.sh
 
+sleep 30
 
 # greping for the first line of the left alignment square in the generated QR Code
 docker compose exec bastion /scripts/google_auth_qr_code_generator_test.sh |grep -F "[0m                                                                                          [0m" > /dev/null
@@ -38,7 +39,7 @@ fi
 docker compose run --remove-orphans test /scripts/google_auth_test.sh
 
 docker ps 
-docker logs bastion
+docker logs test-bastion-1
 
 retVal=$?
 
