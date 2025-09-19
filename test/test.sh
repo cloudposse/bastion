@@ -12,11 +12,13 @@ ssh-keygen -q -f fixtures/auth/ida_rsa -N ""
 chmod 600 fixtures/auth/ida_rsa
 
 docker compose down
-docker compose up -d --build bastion
+docker compose up --wait -d --build bastion
 docker compose build test
 
 # wait until bastion is up
 until docker compose exec bastion ps aux|grep -v grep| grep sshd > /dev/null; do echo "Waiting for bastion to come online..."; sleep 1; done
+
+docker compose exec bastion ps aux
 
 echo "Bastion sshd service started."
 
@@ -33,8 +35,6 @@ if [ $retVal -ne 0 ]; then
 else
   echo "${green}* Google Authenticator QR Code Generator Test Succeeded${reset}"
 fi
-
-sleep 3m
 
 docker compose run --remove-orphans test /scripts/google_auth_test.sh
 
