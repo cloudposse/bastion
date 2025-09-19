@@ -15,7 +15,7 @@ services:
       test: ["CMD", "nc", "-z", "localhost", "22"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 3
 
   test:
     build: "."
