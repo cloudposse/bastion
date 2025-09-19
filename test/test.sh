@@ -35,10 +35,6 @@ else
   echo "${green}* Google Authenticator QR Code Generator Test Succeeded${reset}"
 fi
 
-sleep 30
-
-docker ps
-
 docker compose run --remove-orphans test /scripts/google_auth_test.sh
 
 retVal=$?

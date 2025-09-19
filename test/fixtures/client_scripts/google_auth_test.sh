@@ -8,3 +8,5 @@ sshpass \
 	ssh bastion@bastion \
 	-o StrictHostKeyChecking=no \
 	-- echo 'this is a test.'
+
+echo $?
