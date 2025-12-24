@@ -38,6 +38,9 @@ else
   echo "${green}* Google Authenticator QR Code Generator Test Succeeded${reset}"
 fi
 
+# Testing if this is a timing race condition issue
+sleep 5
+
 docker compose run --remove-orphans test /scripts/google_auth_test.sh
 
 retVal=$?
