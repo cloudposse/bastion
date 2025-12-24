@@ -20,8 +20,6 @@ docker compose build test
 # wait until bastion is up
 until docker compose exec bastion ps aux|grep -v grep| grep sshd > /dev/null; do echo "Waiting for bastion to come online..."; sleep 1; done
 
-docker compose exec bastion ps aux
-
 echo "Bastion sshd service started."
 
 docker compose exec bastion /scripts/setup.sh
@@ -48,6 +46,7 @@ retVal=$?
 
 if [ $retVal -ne 0 ]; then
   echo "${red}* Google Authenticator/SSH Test Failed${reset}"
+  echo "Logs from bastion (executed before the failure):"
   docker logs test-bastion-1
   exit $retVal
 else
