@@ -41,7 +41,10 @@ fi
 # Testing if this is a timing race condition issue
 sleep 5
 
-docker compose run --remove-orphans test /scripts/google_auth_test.sh
+# Ensure bastion is running before running test
+docker compose up -d --no-recreate bastion
+
+docker compose run --no-deps --rm test /scripts/google_auth_test.sh
 
 retVal=$?
 
@@ -76,7 +79,10 @@ else
   echo "${green}* Slack API Connection Test Succeeded${reset}"
 fi
 
-export SSHRC_KILL_OUTPUT=`docker compose run --remove-orphans test /scripts/sshrc_kill_test.sh`
+# Ensure bastion is running before running test
+docker compose up -d --no-recreate bastion
+
+export SSHRC_KILL_OUTPUT=`docker compose run --no-deps --rm test /scripts/sshrc_kill_test.sh`
 
 if [[ "$SSHRC_KILL_OUTPUT" == *"this output should never print"* ]]; then
   echo "${red}* Failure to quit after non-zero exit code in sshrc${reset}"
