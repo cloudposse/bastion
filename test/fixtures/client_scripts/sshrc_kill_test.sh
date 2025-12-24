@@ -1,5 +1,5 @@
 #!/bin/sh
-ping -c 1 -w 5 bastion
+ping -c 1 -w 5 bastion > /dev/null
 
 # Wait for SSH to be available on port 22
 max_attempts=10

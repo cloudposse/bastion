@@ -1,5 +1,5 @@
 #!/bin/sh
-ping -c 1 -w 5 bastion # > /dev/null
+ping -c 1 -w 5 bastion > /dev/null
 
 # Wait for SSH to be available on port 22
 max_attempts=10
@@ -21,6 +21,8 @@ sshpass \
 	-P 'Verification code:' \
 	-f ./code \
 	ssh bastion@bastion \
+	-i /root/.ssh/id_rsa \
 	-o StrictHostKeyChecking=no \
+	-o IdentitiesOnly=yes \
 	-- echo 'this is a test.'
 
