@@ -1,5 +1,7 @@
 #!/bin/sh
-ping -c 1 -w 5 bastion > /dev/null
+ping -c 1 -w 5 bastion # > /dev/null
+
+
 
 # Add -vv for debugging.
 sshpass \
