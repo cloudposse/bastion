@@ -38,8 +38,6 @@ else
   echo "${green}* Google Authenticator QR Code Generator Test Succeeded${reset}"
 fi
 
-# Testing if this is a timing race condition issue
-sleep 5
 
 # Ensure bastion is running before running test
 docker compose up -d --no-recreate bastion
