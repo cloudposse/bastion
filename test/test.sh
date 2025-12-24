@@ -11,7 +11,7 @@ echo "Generating test ssh keys..."
 rm -rf fixtures/auth/ida_rsa*
 ssh-keygen -q -f fixtures/auth/ida_rsa -N ""
 chmod 600 fixtures/auth/ida_rsa
-echo "ssh keys generated.
+echo "ssh keys generated."
 
 docker compose down
 docker compose up --wait -d --build bastion
