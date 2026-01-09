@@ -1,5 +1,4 @@
 #!/bin/bash
 
-([ -f /etc/ssh/ssh_host_rsa_key ] || ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N "")
-
-
+([ -f /etc/ssh/ssh_host_rsa_key ] && rm -f /etc/ssh/ssh_host_rsa*)
+([ -f /etc/ssh/ssh_host_ed25519_key ] || ssh-keygen -ted25519 -f /etc/ssh/ssh_host_ed25519_key -N "")

@@ -4,7 +4,7 @@ ListenAddress 0.0.0.0
 ListenAddress ::
 
 Protocol 2
-HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
@@ -48,7 +48,7 @@ ChallengeResponseAuthentication yes
 UsePAM yes
 AuthenticationMethods publickey,keyboard-interactive
 AllowAgentForwarding yes
-AllowTcpForwarding no
+AllowTcpForwarding yes
 GatewayPorts no
 X11Forwarding no
 PermitTTY yes
