@@ -14,19 +14,13 @@ name: bastion
 license: "APACHE2"
 
 # Canonical GitHub repo
-github_repo: cloudposse/bastion
+github_repo: nv6/bastion
 
 # Badges to display
 badges:
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/bastion.svg"
-    url: "https://github.com/cloudposse/bastion/releases/latest"
-  - name: "Build & Test Status"
-    image: "https://github.com/cloudposse/bastion/actions/workflows/integration-tests.yml/badge.svg"
-    url: "https://github.com/cloudposse/bastion/actions/workflows/integration-tests.yml"
-  - name: "Slack Community"
-    image: "https://slack.cloudposse.com/badge.svg"
-    url: "https://slack.cloudposse.com"
+    url: "https://github.com/nv6/bastion/releases/latest"
 
 # Short description of this project
 description: |-
@@ -62,7 +56,7 @@ quickstart: |-
   $ docker run -it -p 1234:22 \
        -e MFA_PROVIDER=google-authenticator \
        -v ~/.ssh/authorized_keys:/root/.ssh/authorized_keys \
-       cloudposse/bastion
+       nv6/bastion
   ```
 
   Now, in another terminal you should be able to run:
@@ -80,13 +74,13 @@ usage: |-
 
 
   ```bash
-  $ docker run -p 1234:22 cloudposse/bastion:latest
+  $ docker run -p 1234:22 nv6/bastion:latest
   ```
 
   ### Building
 
   ```bash
-  $ git clone https://github.com/cloudposse/bastion.git
+  $ git clone https://github.com/nv6/bastion.git
   $ cd bastion
   $ make docker:build
   ```
