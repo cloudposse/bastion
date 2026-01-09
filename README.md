@@ -78,6 +78,25 @@ $ cd bastion
 $ make docker:build
 ```
 
+#### Building README only
+
+```bash
+$ make init
+$ pushd build-harness/modules/readme
+```
+
+From there, open Makefile, replace line 5 (or wherever the following variable is defined) with:
+
+```makefile
+export README_TEMPLATE_REPO_ORG ?= cloudposse
+```
+
+Then:
+```bash
+popd
+make readme
+```
+
 ### Testing
 
 Run basic connection tests
