@@ -34,3 +34,9 @@ test:
 
 cleantest:
 	cd test && docker compose down
+
+readme:
+	@atmos readme
+
+readme/build:
+	@atmos readme

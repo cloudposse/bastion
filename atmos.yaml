@@ -1,0 +1,2 @@
+import:
+  - https://raw.githubusercontent.com/cloudposse/.github/refs/heads/main/.github/atmos/github-action.yaml
