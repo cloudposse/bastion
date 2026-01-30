@@ -2,4 +2,6 @@
 echo "- Locking down /proc"
 chmod 700 /proc
 
-
+if [ "$?" == "1" ]; then
+  echo "Do not have permissions to lockdown /proc"
+fi

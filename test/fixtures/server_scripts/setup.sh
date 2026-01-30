@@ -3,6 +3,10 @@
 # This script runs on the test bastion server to initialize and setup the test environment.
 syslogd
 
+# Setup expect for google auth test
+apk update
+apk add expect
+
 rm -rf /var/log/sudo-io
 
 useradd -m bastion

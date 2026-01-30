@@ -1,24 +1,34 @@
-name: feature-branch
+name: Branch
 on:
   pull_request:
     branches:
       - main
       - release/**
     types: [opened, synchronize, reopened, labeled, unlabeled]
-
+  push:
+    branches:
+      - main
+      - release/**
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
+      
 permissions:
   pull-requests: write
   id-token: write
   contents: read
-
+  packages: write
+  
 jobs:
   ci-readme:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-readme.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-readme.yml@main
     if: ${{ github.event_name == 'push' }}
     secrets: inherit    
 
   ci-codeowners:
-    uses: cloudposse/github-actions-workflows/.github/workflows/ci-codeowners.yml@main
+    uses: cloudposse/.github/.github/workflows/shared-codeowners.yml@main
     with:
       is_fork: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
     secrets: inherit
@@ -28,7 +38,7 @@ jobs:
     steps:
       - uses: cloudposse/github-action-release-label-validator@v1
 
-  ci-build-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,12 +50,12 @@ jobs:
 
       - name: Run Tests
         shell: bash
-        run: cd test && ./test.sh
+        run: make test
 
       - name: Cleanup
         if: always()
         shell: bash
-        run: cd test && docker-compose down
+        run: make cleantest
 
   ci:
     runs-on: ubuntu-latest
@@ -54,4 +64,43 @@ jobs:
       - run: |
           echo '${{ toJSON(needs) }}'  # easier debug
           ! ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
-    needs: [ ci-readme, ci-codeowners, ci-labels, ci-build-test ]
+    needs: [ ci-readme, ci-codeowners, ci-labels, test ]
+
+  ci-build-push:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    needs: [ ci ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build
+        id: build
+        uses: cloudposse/github-action-docker-build-push@main
+        with:
+          registry: registry.hub.docker.com
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ secrets.DOCKERHUB_USERNAME }}"
+          password: "${{ secrets.DOCKERHUB_PASSWORD }}"
+
+      - name: Build GHR
+        id: build-ghr
+        uses: cloudposse/github-action-docker-build-push@main
+        with:
+          registry: ghcr.io
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ github.actor }}"
+          password: "${{ secrets.GITHUB_TOKEN }}"
+
+  auto-release:
+    name: "Release"
+    needs: [ci, ci-build-push]
+    uses: cloudposse/.github/.github/workflows/shared-auto-release.yml@main
+    if: ${{ github.event_name == 'push' }}
+    with:
+      publish: true
+    secrets: inherit
