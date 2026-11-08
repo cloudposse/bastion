@@ -1,8 +1,7 @@
 diff --git a/session.c b/session.c
-index 89dcfdab..13b70ae8 100644
 --- a/session.c
 +++ b/session.c
-@@ -660,12 +660,11 @@ do_exec(struct ssh *ssh, Session *s, const char *command)
+@@ -639,12 +639,11 @@ do_exec(struct ssh *ssh, Session *s, const char *command)
  	const char *forced = NULL, *tty = NULL;
  	char session_type[1024];
  
