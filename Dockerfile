@@ -1,4 +1,4 @@
-FROM alpine:3.21 AS base
+FROM alpine:3.24 AS base
 
 ##
 ## Base builder image
@@ -44,8 +44,12 @@ RUN cd src && \
 ##
 FROM builder AS openssh-portable-builder
 
-ARG OPENSSH_VERSION=V_9_9_P2
-RUN git clone --branch ${OPENSSH_VERSION} --single-branch https://github.com/openssh/openssh-portable src
+# 10.6p2 includes the password-authentication bypass fix. Alpine 3.24's
+# packaged OpenSSH is 10.3p1 plus backports; those backports are not applied here.
+ARG OPENSSH_VERSION=10.6p2
+RUN wget https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VERSION}.tar.gz && \
+    mkdir -p src && \
+    tar -zxf openssh-${OPENSSH_VERSION}.tar.gz --strip-components=1 -C src
 
 COPY patches/ /patches/
 
@@ -63,6 +67,7 @@ RUN cd src && \
         --with-privsep-path=/var/empty \
         --with-privsep-user=sshd \
         --with-ssl-engine \
+        --disable-utmp \
         --disable-wtmp \
         --with-pam=/usr/lib64/security && \
     make && \

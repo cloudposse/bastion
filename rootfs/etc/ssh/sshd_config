@@ -3,7 +3,6 @@ AddressFamily any
 ListenAddress 0.0.0.0
 ListenAddress ::
 
-Protocol 2
 HostKey /etc/ssh/ssh_host_rsa_key
 
 # Lifetime and size of ephemeral version 1 server key
